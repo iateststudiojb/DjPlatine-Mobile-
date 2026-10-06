@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Dual DJ Mixer Mobile - Touch Slide Optimized</title>
+  <title>Dual DJ Mixer Mobile - Dynamic Loop Anchor</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -201,7 +201,6 @@
 
     .fader-val { color: #38bdf8; font-family: monospace; }
 
-    /* COMPOSANT SLIDE TACTILE HORIZONTAL */
     .touch-slide-h {
       height: 24px;
       background: #020617;
@@ -907,7 +906,7 @@
   </main>
 
   <footer>
-    <span>Dual DJ Mixer Mobile - Custom Touch Slide Controls</span>
+    <span>Dual DJ Mixer Mobile - Dynamic Loop Engine</span>
     <span id="status">Audio Inactif</span>
   </footer>
 
@@ -940,7 +939,7 @@
       });
     });
 
-    // COMPOSANTS COMPATIBLES GLISSEMENT TACTILE (TOUCH SLIDERS)
+    // COMPOSANTS SLIDERS TACTILES
     function createTouchSlider({ containerEl, fillEl, handleEl, min, max, initialValue, isVertical = false, onChange }) {
       let value = initialValue;
 
@@ -1005,7 +1004,7 @@
       };
     }
 
-    // CLASSE PLATINE DE MIXAGE
+    // CLASSE PLATINE DJ AVEC ANCRAGE DYNAMIQUE
     class DJDeck {
       constructor(id) {
         this.id = id;
@@ -1019,6 +1018,10 @@
         this.courseVal = 4;
         this.fineVal = 0.00;
         this.loopMode = 'OFF';
+        
+        // GESTION DU POINT D'ANCRAGE LOOP
+        this.loopAnchorPoint = null; // Position enregistrée lors de l'activation du Loop
+        
         this.startTime = 0;
         this.pauseOffset = 0;
 
@@ -1054,7 +1057,6 @@
       }
 
       initSliders() {
-        // Slide Vitesse (Horizontal)
         this.speedSlider = createTouchSlider({
           containerEl: document.getElementById(`slideSpeed${this.id}`),
           fillEl: document.getElementById(`slideSpeedFill${this.id}`),
@@ -1069,7 +1071,6 @@
           }
         });
 
-        // Slide Pitch (Horizontal)
         this.pitchSlider = createTouchSlider({
           containerEl: document.getElementById(`slidePitch${this.id}`),
           fillEl: document.getElementById(`slidePitchFill${this.id}`),
@@ -1084,7 +1085,7 @@
           }
         });
 
-        // Slide Loop Course (Vertical)
+        // Loop Course Slider
         this.courseSlider = createTouchSlider({
           containerEl: document.getElementById(`slideCourse${this.id}`),
           fillEl: document.getElementById(`slideCourseFill${this.id}`),
@@ -1100,7 +1101,7 @@
           }
         });
 
-        // Slide Loop Fine (Vertical)
+        // Loop Fine Slider
         this.fineSlider = createTouchSlider({
           containerEl: document.getElementById(`slideFine${this.id}`),
           fillEl: document.getElementById(`slideFineFill${this.id}`),
@@ -1214,7 +1215,7 @@
                 this.bpmEl.textContent = "Custom";
                 if (this.isPlaying) this.play(0);
               },
-              () => alert("Format audio non supporté. Essayez un fichier MP3/WAV.")
+              () => alert("Format audio non supporté.")
             );
           } catch (err) {
             alert("Erreur lors de la lecture du fichier.");
@@ -1287,6 +1288,14 @@
         this.loopMode = mode;
         this.btnLoopAuto.classList.toggle('active', mode === 'AUTO');
         this.btnLoopAll.classList.toggle('active', mode === 'ALL');
+
+        if (mode === 'AUTO') {
+          // Fixer l'ancrage exactement au moment où l'utilisateur appuie sur AUTO
+          this.loopAnchorPoint = this.getCurrentPosition();
+        } else {
+          this.loopAnchorPoint = null;
+        }
+
         this.updateLoopDisplay();
         this.applyLoopBounds();
       }
@@ -1297,8 +1306,23 @@
         if (this.loopMode === 'AUTO') {
           const currentPos = this.getCurrentPosition();
           const duration = this.getCalculatedLoopDuration();
-          this.source.loopStart = currentPos;
-          this.source.loopEnd = Math.min(currentPos + duration, this.buffer.duration);
+          
+          if (this.loopAnchorPoint === null) {
+            this.loopAnchorPoint = currentPos;
+          }
+
+          const loopStart = this.loopAnchorPoint;
+          const loopEnd = Math.min(loopStart + duration, this.buffer.duration);
+
+          // VÉRIFICATION : Si le fader descend en dessous de la position courante
+          if (currentPos < loopStart || currentPos >= loopEnd) {
+            // Relancer immédiatement au point d'ancrage sans interruption
+            this.play(loopStart);
+            return;
+          }
+
+          this.source.loopStart = loopStart;
+          this.source.loopEnd = loopEnd;
           this.source.loop = true;
         } else if (this.loopMode === 'ALL') {
           this.source.loopStart = 0;
@@ -1318,6 +1342,12 @@
       getCurrentPosition() {
         if (!this.isPlaying || !this.buffer) return this.pauseOffset;
         const elapsed = (audioCtx.currentTime - this.startTime) * Math.abs(this.getCombinedRate());
+        
+        if (this.loopMode === 'AUTO' && this.loopAnchorPoint !== null) {
+          const dur = this.getCalculatedLoopDuration();
+          return this.loopAnchorPoint + (elapsed % dur);
+        }
+
         if (this.isReverse) {
           return Math.max(0, (this.pauseOffset - elapsed) % this.buffer.duration);
         }
@@ -1354,7 +1384,9 @@
 
       play(offset = 0) {
         if (!this.buffer) return;
-        if (this.source) this.source.stop();
+        if (this.source) {
+          try { this.source.stop(); } catch(e){}
+        }
 
         this.source = audioCtx.createBufferSource();
         this.source.buffer = this.buffer;
@@ -1377,7 +1409,7 @@
       stop() {
         if (this.source) {
           this.pauseOffset = this.getCurrentPosition();
-          this.source.stop();
+          try { this.source.stop(); } catch(e){}
           this.source = null;
         }
         this.isPlaying = false;
