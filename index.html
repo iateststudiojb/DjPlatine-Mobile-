@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Dual DJ Mixer Mobile - iOS Optimized</title>
+  <title>Dual DJ Mixer Mobile - Touch Slide Optimized</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -42,7 +42,6 @@
       padding-bottom: env(safe-area-inset-bottom);
     }
 
-    /* BANDEAU ACTIVATION AUDIO MOBILE */
     #audioUnlockBanner {
       background: linear-gradient(90deg, #8b5cf6, #ec4899);
       color: white;
@@ -57,7 +56,6 @@
       flex-shrink: 0;
     }
 
-    /* NAVIGATION PAR ONGLETS MOBILE */
     .mobile-tabs {
       display: flex;
       background: #020617;
@@ -97,7 +95,6 @@
       background: rgba(236, 72, 153, 0.1);
     }
 
-    /* CONTENEUR PRINCIPAL ET VUES */
     .main-content {
       flex: 1;
       position: relative;
@@ -118,7 +115,6 @@
       display: flex;
     }
 
-    /* CARTES PLATINES */
     .deck-card {
       background: var(--panel);
       border-radius: 12px;
@@ -177,7 +173,7 @@
     .btn-file { background: #2563eb; color: white; }
     .file-input { display: none; }
 
-    /* FADERS HORIZONTAUX SUPERIEURS (SPEED & PITCH) */
+    /* FADERS TACTILES HORIZONTAUX (SPEED & PITCH) */
     .top-faders-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -191,7 +187,7 @@
     .h-fader-group {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
     }
 
     .fader-label-row {
@@ -205,25 +201,49 @@
 
     .fader-val { color: #38bdf8; font-family: monospace; }
 
-    input[type="range"].h-fader {
-      width: 100%;
-      height: 5px;
+    /* COMPOSANT SLIDE TACTILE HORIZONTAL */
+    .touch-slide-h {
+      height: 24px;
       background: #020617;
-      border-radius: 3px;
-      outline: none;
-      accent-color: #38bdf8;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      position: relative;
+      touch-action: none;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
     }
 
-    /* CORPS PLATINE : LOOP GAUCHE / VINYLE + BOUTONS / LOOP DROITE */
+    .touch-slide-h-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(56, 189, 248, 0.25);
+      pointer-events: none;
+    }
+
+    .touch-slide-h-handle {
+      position: absolute;
+      width: 14px;
+      height: 100%;
+      background: #38bdf8;
+      border-radius: 4px;
+      transform: translateX(-50%);
+      pointer-events: none;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+    }
+
+    /* CORPS PLATINE : LOOP GAUCHE / VINYLE / LOOP DROITE */
     .deck-center-body {
       display: grid;
-      grid-template-columns: 50px 1fr 50px;
+      grid-template-columns: 52px 1fr 52px;
       gap: 6px;
       align-items: center;
       flex: 1;
     }
 
-    /* BOUTON START SUPÉRIEUR (AU-DESSUS DU VINYLE) */
     .btn-start-top {
       width: 100%;
       background: #22c55e;
@@ -242,7 +262,6 @@
       box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
     }
 
-    /* RANGÉE SOUS-VINYLE (REV / CUE) */
     .sub-vinyl-controls {
       display: flex;
       gap: 6px;
@@ -274,12 +293,12 @@
       font-size: 0.75rem;
     }
 
-    /* FADERS DE LOOP VERTICAUX */
+    /* COMPOSANT SLIDE TACTILE VERTICAL (LOOP FADERS) */
     .loop-fader-card {
       background: rgba(0,0,0,0.3);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 4px 2px;
+      padding: 6px 3px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -302,37 +321,41 @@
       font-family: monospace;
     }
 
-    .v-fader-wrap {
+    .touch-slide-v {
+      width: 100%;
       flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    input[type="range"].v-fader {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 110px;
-      height: 5px;
+      margin: 4px 0;
       background: #020617;
       border: 1px solid var(--border);
-      border-radius: 4px;
-      outline: none;
-      transform: rotate(-90deg);
+      border-radius: 6px;
+      position: relative;
+      touch-action: none;
       cursor: pointer;
+      overflow: hidden;
     }
 
-    input[type="range"].v-fader::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 16px;
-      height: 12px;
+    .touch-slide-v-fill {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(245, 158, 11, 0.25);
+      pointer-events: none;
+    }
+
+    .touch-slide-v-handle {
+      position: absolute;
+      height: 14px;
+      left: 2px;
+      right: 2px;
       background: #f59e0b;
       border-radius: 3px;
-      cursor: grab;
+      transform: translateY(-50%);
+      pointer-events: none;
+      box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
     }
 
-    /* PLATINE VINYLE & SCRATCH */
+    /* TURNTABLE / VINYLE */
     .turntable-area {
       display: flex;
       flex-direction: column;
@@ -344,7 +367,7 @@
 
     .turntable {
       width: 100%;
-      max-width: 175px;
+      max-width: 170px;
       aspect-ratio: 1 / 1;
       background: #050811;
       border-radius: 50%;
@@ -393,7 +416,7 @@
     .deck-a-card .vinyl-label { background: radial-gradient(circle, #2563eb, #1e3a8a); }
     .deck-b-card .vinyl-label { background: radial-gradient(circle, #db2777, #831843); }
 
-    /* BARRE D'ACTION LOOP EN BAS */
+    /* BARRE LOOP BASSE */
     .loop-action-bar {
       display: flex;
       align-items: center;
@@ -441,7 +464,7 @@
       font-size: 0.65rem;
     }
 
-    /* VUE MIXEUR CENTRAL */
+    /* MIXEUR */
     .mixer-card {
       background: var(--panel);
       border-radius: 12px;
@@ -562,7 +585,6 @@
       cursor: ew-resize;
     }
 
-    /* CONTAINER ENREGISTREMENT MASTER */
     .rec-box {
       background: rgba(0,0,0,0.4);
       border: 1px solid var(--border);
@@ -613,17 +635,14 @@
 </head>
 <body>
 
-  <!-- BANDEAU ACTIVATION MOBILE -->
   <div id="audioUnlockBanner">🔊 TOUCHER ICI POUR ACTIVER LE SON SUR MOBILE</div>
 
-  <!-- NAVIGATION ONGLETS MOBILE -->
   <nav class="mobile-tabs">
     <button class="tab-btn active" data-tab="deckA">PLATINE A</button>
     <button class="tab-btn" data-tab="mixer">MIXEUR</button>
     <button class="tab-btn" data-tab="deckB">PLATINE B</button>
   </nav>
 
-  <!-- CONTENU PRINCIPAL -->
   <main class="main-content">
     
     <!-- VUE PLATINE A -->
@@ -643,14 +662,17 @@
           </div>
         </div>
 
-        <!-- REGLAGES HORIZONTAUX DU SPEED & PITCH -->
+        <!-- SLIDES HORIZONTAUX SPEED & PITCH -->
         <div class="top-faders-grid">
           <div class="h-fader-group">
             <div class="fader-label-row">
               <span>Vitesse (Speed)</span>
               <span id="speedDispA" class="fader-val">1.00x</span>
             </div>
-            <input type="range" class="h-fader" id="speedFaderA" min="0.5" max="1.5" step="0.01" value="1.0">
+            <div class="touch-slide-h" id="slideSpeedA">
+              <div class="touch-slide-h-fill" id="slideSpeedFillA"></div>
+              <div class="touch-slide-h-handle" id="slideSpeedHandleA"></div>
+            </div>
           </div>
 
           <div class="h-fader-group">
@@ -658,27 +680,29 @@
               <span>Hauteur (Pitch)</span>
               <span id="pitchDispA" class="fader-val">0 st</span>
             </div>
-            <input type="range" class="h-fader" id="pitchFaderA" min="-12" max="12" step="1" value="0">
+            <div class="touch-slide-h" id="slidePitchA">
+              <div class="touch-slide-h-fill" id="slidePitchFillA"></div>
+              <div class="touch-slide-h-handle" id="slidePitchHandleA"></div>
+            </div>
           </div>
         </div>
 
-        <!-- ZONE CENTRALE : LOOP GAUCHE / VINYLE + DECK CONTROLS / LOOP DROITE -->
+        <!-- ZONE CENTRALE -->
         <div class="deck-center-body">
-          <!-- LOOP GROSSIER (3s à 18s) -->
+          <!-- LOOP GROSSIER VERTICAL -->
           <div class="loop-fader-card">
             <span class="loop-fader-title">Course</span>
             <span id="courseDispA" class="loop-fader-val">4s</span>
-            <div class="v-fader-wrap">
-              <input type="range" class="v-fader" id="courseFaderA" min="3" max="18" step="1" value="4">
+            <div class="touch-slide-v" id="slideCourseA">
+              <div class="touch-slide-v-fill" id="slideCourseFillA"></div>
+              <div class="touch-slide-v-handle" id="slideCourseHandleA"></div>
             </div>
           </div>
 
-          <!-- VINYLE SCRATCH + COMMANDES SURÉLEVÉES -->
+          <!-- VINYLE & BOUTONS SURÉLEVÉS -->
           <div class="turntable-area">
-            <!-- BOUTON START SUPÉRIEUR -->
             <button class="btn-start-top" id="btnPlayA">START</button>
 
-            <!-- PLATINE VINYLE -->
             <div class="turntable" id="vinylA">
               <div class="vinyl-grooves"></div>
               <div class="vinyl-label">
@@ -687,24 +711,24 @@
               </div>
             </div>
 
-            <!-- RANGÉE REV ET CUE SOUS LE VINYLE -->
             <div class="sub-vinyl-controls">
               <button class="btn btn-rev" id="btnRevA">REV</button>
               <button class="btn btn-cue" id="btnCUEA">CUE</button>
             </div>
           </div>
 
-          <!-- LOOP FIN (-0.50s à +0.50s) -->
+          <!-- LOOP FIN VERTICAL -->
           <div class="loop-fader-card">
             <span class="loop-fader-title">Fine</span>
             <span id="fineDispA" class="loop-fader-val">+0.00s</span>
-            <div class="v-fader-wrap">
-              <input type="range" class="v-fader" id="fineFaderA" min="-0.50" max="0.50" step="0.01" value="0.00">
+            <div class="touch-slide-v" id="slideFineA">
+              <div class="touch-slide-v-fill" id="slideFineFillA"></div>
+              <div class="touch-slide-v-handle" id="slideFineHandleA"></div>
             </div>
           </div>
         </div>
 
-        <!-- BARRE DE BOUCLAGE (REHAUSSÉE EN BAS DE DECK) -->
+        <!-- BARRE ACTION LOOP -->
         <div class="loop-action-bar">
           <div class="loop-btns-group">
             <button class="btn btn-step" id="btnHalfA">1/2</button>
@@ -725,7 +749,6 @@
         <div class="mixer-header">MIXEUR CENTRAL 2 CANAUX</div>
 
         <div class="channels-container">
-          <!-- CANAL 1 -->
           <div class="channel-strip">
             <span class="ch-title ch-a">CH 1</span>
             <div class="knob-row">
@@ -745,7 +768,6 @@
             </div>
           </div>
 
-          <!-- CANAL 2 -->
           <div class="channel-strip">
             <span class="ch-title ch-b">CH 2</span>
             <div class="knob-row">
@@ -766,13 +788,11 @@
           </div>
         </div>
 
-        <!-- CROSSFADER -->
         <div class="crossfader-box">
           <div class="crossfader-title">CROSSFADER</div>
           <input type="range" class="crossfader" id="crossfader" min="0" max="1" step="0.01" value="0.5">
         </div>
 
-        <!-- ENREGISTREUR WAV MASTER -->
         <div class="rec-box">
           <div class="rec-info">
             <span class="rec-dot" id="recDot"></span>
@@ -803,14 +823,17 @@
           </div>
         </div>
 
-        <!-- REGLAGES HORIZONTAUX DU SPEED & PITCH -->
+        <!-- SLIDES HORIZONTAUX SPEED & PITCH -->
         <div class="top-faders-grid">
           <div class="h-fader-group">
             <div class="fader-label-row">
               <span>Vitesse (Speed)</span>
               <span id="speedDispB" class="fader-val">1.00x</span>
             </div>
-            <input type="range" class="h-fader" id="speedFaderB" min="0.5" max="1.5" step="0.01" value="1.0">
+            <div class="touch-slide-h" id="slideSpeedB">
+              <div class="touch-slide-h-fill" id="slideSpeedFillB"></div>
+              <div class="touch-slide-h-handle" id="slideSpeedHandleB"></div>
+            </div>
           </div>
 
           <div class="h-fader-group">
@@ -818,27 +841,29 @@
               <span>Hauteur (Pitch)</span>
               <span id="pitchDispB" class="fader-val">0 st</span>
             </div>
-            <input type="range" class="h-fader" id="pitchFaderB" min="-12" max="12" step="1" value="0">
+            <div class="touch-slide-h" id="slidePitchB">
+              <div class="touch-slide-h-fill" id="slidePitchFillB"></div>
+              <div class="touch-slide-h-handle" id="slidePitchHandleB"></div>
+            </div>
           </div>
         </div>
 
-        <!-- ZONE CENTRALE : LOOP GAUCHE / VINYLE + DECK CONTROLS / LOOP DROITE -->
+        <!-- ZONE CENTRALE -->
         <div class="deck-center-body">
-          <!-- LOOP GROSSIER (3s à 18s) -->
+          <!-- LOOP GROSSIER VERTICAL -->
           <div class="loop-fader-card">
             <span class="loop-fader-title">Course</span>
             <span id="courseDispB" class="loop-fader-val">4s</span>
-            <div class="v-fader-wrap">
-              <input type="range" class="v-fader" id="courseFaderB" min="3" max="18" step="1" value="4">
+            <div class="touch-slide-v" id="slideCourseB">
+              <div class="touch-slide-v-fill" id="slideCourseFillB"></div>
+              <div class="touch-slide-v-handle" id="slideCourseHandleB"></div>
             </div>
           </div>
 
-          <!-- VINYLE SCRATCH + COMMANDES SURÉLEVÉES -->
+          <!-- VINYLE & BOUTONS SURÉLEVÉS -->
           <div class="turntable-area">
-            <!-- BOUTON START SUPÉRIEUR -->
             <button class="btn-start-top" id="btnPlayB">START</button>
 
-            <!-- PLATINE VINYLE -->
             <div class="turntable" id="vinylB">
               <div class="vinyl-grooves"></div>
               <div class="vinyl-label">
@@ -847,24 +872,24 @@
               </div>
             </div>
 
-            <!-- RANGÉE REV ET CUE SOUS LE VINYLE -->
             <div class="sub-vinyl-controls">
               <button class="btn btn-rev" id="btnRevB">REV</button>
               <button class="btn btn-cue" id="btnCUEB">CUE</button>
             </div>
           </div>
 
-          <!-- LOOP FIN (-0.50s à +0.50s) -->
+          <!-- LOOP FIN VERTICAL -->
           <div class="loop-fader-card">
             <span class="loop-fader-title">Fine</span>
             <span id="fineDispB" class="loop-fader-val">+0.00s</span>
-            <div class="v-fader-wrap">
-              <input type="range" class="v-fader" id="fineFaderB" min="-0.50" max="0.50" step="0.01" value="0.00">
+            <div class="touch-slide-v" id="slideFineB">
+              <div class="touch-slide-v-fill" id="slideFineFillB"></div>
+              <div class="touch-slide-v-handle" id="slideFineHandleB"></div>
             </div>
           </div>
         </div>
 
-        <!-- BARRE DE BOUCLAGE (REHAUSSÉE EN BAS DE DECK) -->
+        <!-- BARRE ACTION LOOP -->
         <div class="loop-action-bar">
           <div class="loop-btns-group">
             <button class="btn btn-step" id="btnHalfB">1/2</button>
@@ -882,7 +907,7 @@
   </main>
 
   <footer>
-    <span>Dual DJ Mixer Mobile - Dual Precision Loop & Scratch Engine</span>
+    <span>Dual DJ Mixer Mobile - Custom Touch Slide Controls</span>
     <span id="status">Audio Inactif</span>
   </footer>
 
@@ -894,7 +919,7 @@
     let recordedChunks = [];
     let recordedAudioBlob = null;
 
-    // GESTIONNAIRE DES ONGLETS MOBILE
+    // GESTIONNAIRE D'ONGLETS MOBILE
     const tabBtns = document.querySelectorAll('.tab-btn');
     const viewPanels = {
       deckA: document.getElementById('deckAView'),
@@ -905,19 +930,80 @@
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const targetTab = btn.getAttribute('data-tab');
-        
         tabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
         Object.keys(viewPanels).forEach(key => {
-          if (key === targetTab) {
-            viewPanels[key].classList.add('active');
-          } else {
-            viewPanels[key].classList.remove('active');
-          }
+          if (key === targetTab) viewPanels[key].classList.add('active');
+          else viewPanels[key].classList.remove('active');
         });
       });
     });
+
+    // COMPOSANTS COMPATIBLES GLISSEMENT TACTILE (TOUCH SLIDERS)
+    function createTouchSlider({ containerEl, fillEl, handleEl, min, max, initialValue, isVertical = false, onChange }) {
+      let value = initialValue;
+
+      function updateUI(val) {
+        const pct = Math.max(0, Math.min(1, (val - min) / (max - min)));
+        if (isVertical) {
+          const topPct = (1 - pct) * 100;
+          handleEl.style.top = `${topPct}%`;
+          fillEl.style.height = `${pct * 100}%`;
+        } else {
+          handleEl.style.left = `${pct * 100}%`;
+          fillEl.style.width = `${pct * 100}%`;
+        }
+      }
+
+      function calculateValFromEvent(e) {
+        const rect = containerEl.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        let pct = 0;
+        if (isVertical) {
+          pct = 1 - ((clientY - rect.top) / rect.height);
+        } else {
+          pct = (clientX - rect.left) / rect.width;
+        }
+
+        pct = Math.max(0, Math.min(1, pct));
+        return min + pct * (max - min);
+      }
+
+      function handleMove(e) {
+        e.preventDefault();
+        const newVal = calculateValFromEvent(e);
+        value = newVal;
+        updateUI(value);
+        if (onChange) onChange(value);
+      }
+
+      function handleStart(e) {
+        handleMove(e);
+        window.addEventListener('pointermove', handleMove);
+        window.addEventListener('pointerup', handleEnd);
+        window.addEventListener('pointercancel', handleEnd);
+      }
+
+      function handleEnd() {
+        window.removeEventListener('pointermove', handleMove);
+        window.removeEventListener('pointerup', handleEnd);
+        window.removeEventListener('pointercancel', handleEnd);
+      }
+
+      containerEl.addEventListener('pointerdown', handleStart);
+      updateUI(initialValue);
+
+      return {
+        setValue: (newVal) => {
+          value = Math.max(min, Math.min(max, newVal));
+          updateUI(value);
+        },
+        getValue: () => value
+      };
+    }
 
     // CLASSE PLATINE DE MIXAGE
     class DJDeck {
@@ -930,20 +1016,18 @@
         this.speed = 1.0;
         this.pitchSemitones = 0;
 
-        // Configuration Loop
         this.courseVal = 4;
         this.fineVal = 0.00;
-        this.loopMode = 'OFF'; // 'OFF', 'AUTO', 'ALL'
+        this.loopMode = 'OFF';
         this.startTime = 0;
         this.pauseOffset = 0;
 
-        // Propriétés de Scratching Tactile
         this.isScratching = false;
         this.lastAngle = 0;
         this.lastTime = 0;
         this.scratchVelocity = 0;
 
-        // UI References
+        // Elements UI
         this.btnPlay = document.getElementById(`btnPlay${id}`);
         this.btnRev = document.getElementById(`btnRev${id}`);
         this.btnCue = document.getElementById(`btnCUE${id}`);
@@ -951,14 +1035,9 @@
         this.select = document.getElementById(`select${id}`);
         this.fileInput = document.getElementById(`file${id}`);
 
-        this.speedFader = document.getElementById(`speedFader${id}`);
         this.speedDisp = document.getElementById(`speedDisp${id}`);
-        this.pitchFader = document.getElementById(`pitchFader${id}`);
         this.pitchDisp = document.getElementById(`pitchDisp${id}`);
-
-        this.courseFader = document.getElementById(`courseFader${id}`);
         this.courseDisp = document.getElementById(`courseDisp${id}`);
-        this.fineFader = document.getElementById(`fineFader${id}`);
         this.fineDisp = document.getElementById(`fineDisp${id}`);
         this.totalLoopDisp = document.getElementById(`totalLoopDisp${id}`);
 
@@ -970,7 +1049,72 @@
         this.titleEl = document.getElementById(`title${id}`);
         this.bpmEl = document.getElementById(`bpm${id}`);
 
+        this.initSliders();
         this.initEvents();
+      }
+
+      initSliders() {
+        // Slide Vitesse (Horizontal)
+        this.speedSlider = createTouchSlider({
+          containerEl: document.getElementById(`slideSpeed${this.id}`),
+          fillEl: document.getElementById(`slideSpeedFill${this.id}`),
+          handleEl: document.getElementById(`slideSpeedHandle${this.id}`),
+          min: 0.5,
+          max: 1.5,
+          initialValue: 1.0,
+          onChange: (val) => {
+            this.speed = Math.round(val * 100) / 100;
+            this.speedDisp.textContent = this.speed.toFixed(2) + 'x';
+            this.updatePlaybackRate();
+          }
+        });
+
+        // Slide Pitch (Horizontal)
+        this.pitchSlider = createTouchSlider({
+          containerEl: document.getElementById(`slidePitch${this.id}`),
+          fillEl: document.getElementById(`slidePitchFill${this.id}`),
+          handleEl: document.getElementById(`slidePitchHandle${this.id}`),
+          min: -12,
+          max: 12,
+          initialValue: 0,
+          onChange: (val) => {
+            this.pitchSemitones = Math.round(val);
+            this.pitchDisp.textContent = (this.pitchSemitones > 0 ? '+' : '') + this.pitchSemitones + ' st';
+            this.updatePlaybackRate();
+          }
+        });
+
+        // Slide Loop Course (Vertical)
+        this.courseSlider = createTouchSlider({
+          containerEl: document.getElementById(`slideCourse${this.id}`),
+          fillEl: document.getElementById(`slideCourseFill${this.id}`),
+          handleEl: document.getElementById(`slideCourseHandle${this.id}`),
+          min: 3,
+          max: 18,
+          initialValue: 4,
+          isVertical: true,
+          onChange: (val) => {
+            this.courseVal = Math.round(val);
+            this.updateLoopDisplay();
+            this.applyLoopBounds();
+          }
+        });
+
+        // Slide Loop Fine (Vertical)
+        this.fineSlider = createTouchSlider({
+          containerEl: document.getElementById(`slideFine${this.id}`),
+          fillEl: document.getElementById(`slideFineFill${this.id}`),
+          handleEl: document.getElementById(`slideFineHandle${this.id}`),
+          min: -0.50,
+          max: 0.50,
+          initialValue: 0.00,
+          isVertical: true,
+          onChange: (val) => {
+            this.fineVal = Math.round(val * 100) / 100;
+            this.updateLoopDisplay();
+            this.applyLoopBounds();
+          }
+        });
       }
 
       initAudioNodes() {
@@ -1018,7 +1162,6 @@
         this.btnPlay.addEventListener('click', () => this.togglePlay());
         this.btnCue.addEventListener('click', () => { this.stop(); this.play(0); });
 
-        // Reverse Playback
         this.btnRev.addEventListener('click', () => {
           this.isReverse = !this.isReverse;
           this.btnRev.classList.toggle('active', this.isReverse);
@@ -1029,42 +1172,16 @@
           }
         });
 
-        // Speed & Pitch
-        this.speedFader.addEventListener('input', (e) => {
-          this.speed = parseFloat(e.target.value);
-          this.speedDisp.textContent = this.speed.toFixed(2) + 'x';
-          this.updatePlaybackRate();
-        });
-
-        this.pitchFader.addEventListener('input', (e) => {
-          this.pitchSemitones = parseInt(e.target.value);
-          this.pitchDisp.textContent = (this.pitchSemitones > 0 ? '+' : '') + this.pitchSemitones + ' st';
-          this.updatePlaybackRate();
-        });
-
-        // Dual Precision Loop Controls
-        this.courseFader.addEventListener('input', (e) => {
-          this.courseVal = parseInt(e.target.value);
-          this.updateLoopDisplay();
-          this.applyLoopBounds();
-        });
-
-        this.fineFader.addEventListener('input', (e) => {
-          this.fineVal = parseFloat(e.target.value);
-          this.updateLoopDisplay();
-          this.applyLoopBounds();
-        });
-
         this.btnHalf.addEventListener('click', () => {
           this.courseVal = Math.max(3, Math.floor(this.courseVal / 2));
-          this.courseFader.value = this.courseVal;
+          this.courseSlider.setValue(this.courseVal);
           this.updateLoopDisplay();
           this.applyLoopBounds();
         });
 
         this.btnDouble.addEventListener('click', () => {
           this.courseVal = Math.min(18, this.courseVal * 2);
-          this.courseFader.value = this.courseVal;
+          this.courseSlider.setValue(this.courseVal);
           this.updateLoopDisplay();
           this.applyLoopBounds();
         });
@@ -1079,7 +1196,6 @@
 
         this.select.addEventListener('change', (e) => this.loadPreset(e.target.value));
 
-        // IMPORTATION DE FICHIER AUDIO COMPATIBLE IOS SAFARI
         this.fileInput.addEventListener('change', async (e) => {
           const file = e.target.files[0];
           if (!file) return;
@@ -1098,22 +1214,18 @@
                 this.bpmEl.textContent = "Custom";
                 if (this.isPlaying) this.play(0);
               },
-              (err) => {
-                alert("Impossible de lire ce fichier audio. Essayez un format MP3 ou WAV valide.");
-              }
+              () => alert("Format audio non supporté. Essayez un fichier MP3/WAV.")
             );
           } catch (err) {
-            alert("Erreur lors de l'accès au fichier.");
+            alert("Erreur lors de la lecture du fichier.");
           }
         });
 
-        // Contrôles de la Table de Mixage
         document.getElementById(`vol${this.id}`).addEventListener('input', (e) => { if (this.gainNode) this.gainNode.gain.value = parseFloat(e.target.value); });
         document.getElementById(`low${this.id}`).addEventListener('input', (e) => { if (this.lowEq) this.lowEq.gain.value = parseFloat(e.target.value); });
         document.getElementById(`mid${this.id}`).addEventListener('input', (e) => { if (this.midEq) this.midEq.gain.value = parseFloat(e.target.value); });
         document.getElementById(`hi${this.id}`).addEventListener('input', (e) => { if (this.hiEq) this.hiEq.gain.value = parseFloat(e.target.value); });
 
-        // Configuration du Scratching Tactile sur le Vinyle
         this.setupScratchEvents();
       }
 
@@ -1150,7 +1262,6 @@
           if (deltaTime > 0) {
             this.scratchVelocity = (deltaAngle / (Math.PI * 2)) / deltaTime;
             let targetRate = this.scratchVelocity * (this.isReverse ? -1 : 1);
-            
             if (Math.abs(targetRate) < 0.05) targetRate = 0;
             this.source.playbackRate.setValueAtTime(targetRate, audioCtx.currentTime);
           }
@@ -1307,7 +1418,6 @@
     const deckA = new DJDeck('A');
     const deckB = new DJDeck('B');
 
-    // INITIALISATION DU MOTEUR AUDIO MOBILE
     function initAudioSystem() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1343,7 +1453,7 @@
       if (deckB.xfadeGain) deckB.xfadeGain.gain.value = Math.sin(val * 0.5 * Math.PI);
     });
 
-    // ENREGISTREUR WAV MASTER
+    // MASTER RECORDING (WAV)
     const btnRec = document.getElementById('btnRec');
     const btnExport = document.getElementById('btnExport');
     const recDot = document.getElementById('recDot');
@@ -1390,7 +1500,6 @@
       recDot.classList.remove('recording');
     }
 
-    // EXPORTATION DU FICHIER WAV ENCODE PCM 16-BIT
     btnExport.addEventListener('click', () => {
       if (!recordedAudioBlob) return;
       const url = URL.createObjectURL(recordedAudioBlob);
