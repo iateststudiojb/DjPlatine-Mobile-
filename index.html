@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Platines DJ Dual Mobile - Precision Scratch & Dual Loop</title>
+  <title>Dual DJ Mixer Mobile - iOS Compatible</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,8 +16,6 @@
       --border: #334155;
       --accent-a: #3b82f6;
       --accent-b: #ec4899;
-      --accent-rev: #f59e0b;
-      --accent-loop-all: #10b981;
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -26,233 +24,206 @@
       box-sizing: border-box;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-touch-callout: none;
       margin: 0;
       padding: 0;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      touch-action: none;
+      touch-action: manipulation;
     }
 
     body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      padding: 6px;
-      padding-bottom: max(6px, env(safe-area-inset-bottom));
-      padding-top: max(6px, env(safe-area-inset-top));
     }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--panel);
-      padding: 4px 8px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      margin-bottom: 6px;
-      height: 42px;
+    /* BANDEAU ACTIVATION AUDIO MOBILE */
+    #audioUnlockBanner {
+      background: linear-gradient(90deg, #8b5cf6, #ec4899);
+      color: white;
+      text-align: center;
+      padding: 8px 4px;
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      z-index: 100;
       flex-shrink: 0;
     }
 
-    h1 {
-      font-size: 0.8rem;
+    /* NAVIGATION PAR ONGLETS MOBILE */
+    .mobile-tabs {
+      display: flex;
+      background: #020617;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 0;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
       font-weight: 800;
-      background: linear-gradient(90deg, #60a5fa, #f472b6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      white-space: nowrap;
+      font-size: 0.85rem;
+      text-align: center;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active[data-tab="deckA"] {
+      color: var(--accent-a);
+      border-bottom-color: var(--accent-a);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .tab-btn.active[data-tab="mixer"] {
+      color: #38bdf8;
+      border-bottom-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .tab-btn.active[data-tab="deckB"] {
+      color: var(--accent-b);
+      border-bottom-color: var(--accent-b);
+      background: rgba(236, 72, 153, 0.1);
+    }
+
+    /* CONTENEUR PRINCIPAL ET VUES */
+    .main-content {
+      flex: 1;
+      position: relative;
       overflow: hidden;
-      text-overflow: ellipsis;
+    }
+
+    .view-panel {
+      position: absolute;
+      inset: 0;
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+    }
+
+    .view-panel.active {
+      display: flex;
+    }
+
+    /* CARTES PLATINES */
+    .deck-card {
+      background: var(--panel);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .deck-a-card { border-top: 4px solid var(--accent-a); }
+    .deck-b-card { border-top: 4px solid var(--accent-b); }
+
+    .deck-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0,0,0,0.3);
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+
+    .deck-title { font-weight: 900; font-size: 0.9rem; }
+    .deck-a-card .deck-title { color: var(--accent-a); }
+    .deck-b-card .deck-title { color: var(--accent-b); }
+
+    .track-select-wrap { display: flex; gap: 6px; align-items: center; }
+
+    select {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      max-width: 120px;
     }
 
     .btn {
       background: var(--border);
       color: var(--text);
       border: none;
-      padding: 6px 10px;
+      padding: 6px 12px;
       border-radius: 6px;
       font-weight: 700;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 4px;
-      transition: all 0.15s ease;
-      touch-action: manipulation;
     }
 
-    .btn:active { transform: scale(0.95); }
-    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-audio { background: #8b5cf6; color: white; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-
-    /* Mobile View Selector Bar */
-    .mobile-tab-bar {
-      display: flex;
-      gap: 4px;
-      background: rgba(0,0,0,0.4);
-      padding: 3px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      margin-bottom: 6px;
-      flex-shrink: 0;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 6px 2px;
-      font-size: 0.65rem;
-      font-weight: 800;
-      border: none;
-      border-radius: 6px;
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .tab-btn.active {
-      background: #2563eb;
-      color: white;
-      box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
-    }
-
-    .tab-btn.tab-b.active {
-      background: #db2777;
-      box-shadow: 0 0 8px rgba(219, 39, 119, 0.6);
-    }
-
-    .tab-btn.tab-mixer.active {
-      background: #059669;
-      box-shadow: 0 0 8px rgba(5, 150, 105, 0.6);
-    }
-
-    .app-container {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 6px;
-      min-height: 0;
-      position: relative;
-    }
-
-    @media (min-width: 900px) {
-      .mobile-tab-bar { display: none; }
-      .app-container {
-        grid-template-columns: 1fr 220px 1fr;
-      }
-      .deck, .mixer { display: flex !important; }
-    }
-
-    .deck {
-      background: var(--panel);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 6px;
-      height: 100%;
-      min-height: 0;
-      position: relative;
-    }
-
-    .deck-a { border-top: 4px solid var(--accent-a); }
-    .deck-b { border-top: 4px solid var(--accent-b); }
-
-    .deck-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      background: rgba(0,0,0,0.3);
-      padding: 6px 8px;
-      border-radius: 8px;
-    }
-
-    .deck-title { font-weight: 800; font-size: 0.85rem; }
-    .deck-a .deck-title { color: var(--accent-a); }
-    .deck-b .deck-title { color: var(--accent-b); }
-
-    .track-select-wrap { display: flex; gap: 4px; align-items: center; }
-
-    select {
-      background: var(--card);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 4px 6px;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      max-width: 115px;
-    }
-
-    .file-btn { font-size: 0.65rem; padding: 4px 8px; background: #3b82f6; }
+    .btn:active { transform: scale(0.96); }
+    .btn-file { background: #2563eb; color: white; }
     .file-input { display: none; }
 
-    .top-faders-bar {
+    /* FADERS HORIZONTAUX SUPERIEURS (SPEED & PITCH) */
+    .top-faders-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid var(--border);
+      gap: 8px;
+      background: rgba(0,0,0,0.25);
+      padding: 8px;
       border-radius: 8px;
-      padding: 6px;
+      border: 1px solid var(--border);
     }
 
-    .fader-horizontal-box {
+    .h-fader-group {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
     }
 
-    .fader-label-wrap {
+    .fader-label-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-size: 0.6rem;
+      font-size: 0.65rem;
       font-weight: 800;
       color: var(--text-muted);
       text-transform: uppercase;
     }
 
-    .fader-val-text {
-      color: #38bdf8;
-      font-family: monospace;
-      font-size: 0.7rem;
-    }
+    .fader-val { color: #38bdf8; font-family: monospace; }
 
     input[type="range"].h-fader {
       width: 100%;
-      height: 12px;
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      height: 6px;
+      background: #020617;
+      border-radius: 3px;
       outline: none;
       accent-color: #38bdf8;
-      cursor: pointer;
-      touch-action: none;
     }
 
-    .deck-body {
-      flex: 1;
+    /* CORPS PLATINE : LOOP GAUCHE / VINYLE / LOOP DROITE */
+    .deck-center-body {
       display: grid;
-      grid-template-columns: 62px 1fr 62px;
-      gap: 6px;
+      grid-template-columns: 55px 1fr 55px;
+      gap: 8px;
       align-items: center;
-      min-height: 0;
+      flex: 1;
+      min-height: 200px;
     }
 
-    .loop-fader-box {
+    /* FADERS DE LOOP VERTICAUX */
+    .loop-fader-card {
       background: rgba(0,0,0,0.3);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -262,119 +233,90 @@
       align-items: center;
       justify-content: space-between;
       height: 100%;
-      max-height: 220px;
     }
 
     .loop-fader-title {
-      font-size: 0.58rem;
-      font-weight: 800;
+      font-size: 0.55rem;
+      font-weight: 900;
       color: #f59e0b;
       text-transform: uppercase;
       text-align: center;
-      line-height: 1.1;
     }
 
-    .loop-fader-value {
-      font-size: 0.7rem;
-      font-weight: 800;
+    .loop-fader-val {
+      font-size: 0.65rem;
+      font-weight: bold;
       color: #fcd34d;
       font-family: monospace;
-      text-align: center;
     }
 
-    .fader-vertical-wrap {
+    .v-fader-wrap {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
 
     input[type="range"].v-fader {
       -webkit-appearance: none;
       appearance: none;
-      width: 110px;
-      height: 10px;
-      background: #0f172a;
+      width: 130px;
+      height: 6px;
+      background: #020617;
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 4px;
       outline: none;
       transform: rotate(-90deg);
       cursor: pointer;
-      touch-action: none;
     }
 
-    input[type="range"].v-fader.loop-course::-webkit-slider-thumb {
+    input[type="range"].v-fader::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 22px;
-      height: 18px;
+      width: 18px;
+      height: 14px;
       background: #f59e0b;
-      border-radius: 4px;
+      border-radius: 3px;
       cursor: grab;
     }
 
-    input[type="range"].v-fader.loop-fine::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 22px;
-      height: 18px;
-      background: #10b981;
-      border-radius: 4px;
-      cursor: grab;
-    }
-
-    .turntable-container {
+    /* PLATINE VINYLE & SCRATCH */
+    .turntable-area {
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100%;
-      position: relative;
-      gap: 6px;
     }
 
     .turntable {
       width: 100%;
-      max-width: 210px;
+      max-width: 220px;
       aspect-ratio: 1 / 1;
       background: #050811;
       border-radius: 50%;
       border: 10px solid #1e293b;
-      box-shadow: inset 0 0 18px rgba(0,0,0,0.9), 0 6px 14px rgba(0,0,0,0.6);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.9), 0 6px 15px rgba(0,0,0,0.6);
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: grab;
       touch-action: none;
-      will-change: transform;
     }
 
-    .turntable.scratching {
-      border-color: #f59e0b;
-      box-shadow: 0 0 22px rgba(245, 158, 11, 0.7);
-    }
+    .turntable.spinning { animation: rotateVinyl 2s linear infinite; }
+    .turntable.spinning-rev { animation: rotateVinylRev 2s linear infinite; }
+
+    @keyframes rotateVinyl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes rotateVinylRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
 
     .vinyl-grooves {
       position: absolute;
-      inset: 8px;
+      inset: 10px;
       border-radius: 50%;
       background: repeating-radial-gradient(circle, #111827 0, #111827 2px, #000 3px, #000 5px);
       opacity: 0.85;
       pointer-events: none;
-    }
-
-    .vinyl-marker {
-      position: absolute;
-      top: 10px;
-      width: 5px;
-      height: 26px;
-      background: #ffffff;
-      border-radius: 3px;
-      box-shadow: 0 0 8px rgba(255,255,255,0.9);
-      pointer-events: none;
-      z-index: 3;
     }
 
     .vinyl-label {
@@ -394,181 +336,195 @@
       pointer-events: none;
     }
 
-    .deck-a .vinyl-label { background: radial-gradient(circle, #2563eb, #1e3a8a); }
-    .deck-b .vinyl-label { background: radial-gradient(circle, #db2777, #831843); }
+    .deck-a-card .vinyl-label { background: radial-gradient(circle, #2563eb, #1e3a8a); }
+    .deck-b-card .vinyl-label { background: radial-gradient(circle, #db2777, #831843); }
 
-    .loop-total-display {
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 3px 10px;
-      font-size: 0.7rem;
-      font-weight: 800;
+    /* BARRE D'ACTION LOOP & COMMANDES DE LECTURE */
+    .loop-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0,0,0,0.3);
+      padding: 6px 8px;
+      border-radius: 8px;
+      gap: 6px;
+    }
+
+    .total-loop-disp {
+      font-size: 0.75rem;
+      font-weight: 900;
       color: #fcd34d;
       font-family: monospace;
-      text-align: center;
+      background: rgba(0,0,0,0.4);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(245, 158, 11, 0.4);
     }
 
-    .deck-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      background: rgba(0,0,0,0.25);
-      padding: 6px;
-      border-radius: 8px;
-    }
+    .loop-btns-group { display: flex; gap: 4px; }
 
-    .loop-actions-bar {
-      display: flex;
-      gap: 4px;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .btn-loop {
-      flex: 1;
-      background: #334155;
+    .btn-loop-mode {
+      background: #1e293b;
       color: #94a3b8;
-      font-size: 0.65rem;
-      padding: 8px 4px;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 0.7rem;
       border-radius: 6px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      font-weight: 800;
     }
 
-    .btn-loop.active {
+    .btn-loop-mode.active {
       background: #f59e0b;
       color: #000;
       font-weight: 900;
-      box-shadow: 0 0 10px rgba(245, 158, 11, 0.7);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
     }
 
-    .btn-loop-all {
-      background: #1e293b;
-      color: #a7f3d0;
-      border: 1px solid #059669;
+    .btn-step {
+      background: #0f172a;
+      color: #38bdf8;
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+      font-size: 0.7rem;
     }
 
-    .btn-loop-all.active {
-      background: var(--accent-loop-all);
-      color: #000;
-      font-weight: 900;
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
-    }
-
-    .playback-row {
+    .deck-controls-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
       gap: 6px;
     }
 
-    .btn-play { background: #22c55e; color: black; font-weight: 800; flex: 2; height: 38px; font-size: 0.8rem; }
+    .btn-play {
+      flex: 2;
+      background: #22c55e;
+      color: #000;
+      font-weight: 900;
+      font-size: 0.85rem;
+      padding: 10px;
+    }
+
     .btn-play.playing { background: #ef4444; color: white; }
-    .btn-cue { flex: 1; height: 38px; font-size: 0.75rem; }
 
     .btn-rev {
+      flex: 1;
       background: #334155;
-      color: #94a3b8;
+      color: #f59e0b;
       font-weight: 800;
-      flex: 1.2;
-      height: 38px;
-      font-size: 0.75rem;
-      border: 1px solid transparent;
     }
 
     .btn-rev.active {
-      background: var(--accent-rev);
+      background: #f59e0b;
       color: #000;
-      box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
     }
 
-    .mixer {
+    /* VUE MIXEUR CENTRAL */
+    .mixer-card {
       background: var(--panel);
       border-radius: 12px;
       border: 1px solid var(--border);
-      padding: 8px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      gap: 6px;
-      height: 100%;
+      gap: 12px;
+      flex: 1;
     }
 
-    .mixer-title {
+    .mixer-header {
       text-align: center;
-      font-size: 0.75rem;
-      font-weight: 800;
+      font-size: 0.8rem;
+      font-weight: 900;
       color: var(--text-muted);
       border-bottom: 1px solid var(--border);
-      padding-bottom: 4px;
+      padding-bottom: 6px;
+      letter-spacing: 1px;
     }
 
-    .eq-section { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; flex: 1; }
+    .channels-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      flex: 1;
+    }
 
     .channel-strip {
       background: rgba(0,0,0,0.25);
-      padding: 6px;
+      border: 1px solid var(--border);
       border-radius: 8px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       justify-content: space-around;
     }
 
-    .ch-label { font-size: 0.7rem; font-weight: 800; }
-    .deck-a-text { color: var(--accent-a); }
-    .deck-b-text { color: var(--accent-b); }
+    .ch-title { font-size: 0.75rem; font-weight: 900; }
+    .ch-a { color: var(--accent-a); }
+    .ch-b { color: var(--accent-b); }
 
-    .knob-group { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; }
-    .knob-label { font-size: 0.6rem; color: var(--text-muted); font-weight: 700; }
+    .knob-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 2px;
+    }
 
-    input[type="range"].knob-slider { width: 85%; height: 8px; accent-color: #38bdf8; touch-action: none; }
+    .knob-label { font-size: 0.6rem; color: var(--text-muted); font-weight: 800; }
+
+    input[type="range"].knob {
+      width: 85%;
+      height: 5px;
+      accent-color: #38bdf8;
+    }
+
+    .fader-vol-wrap {
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+    }
 
     input[type="range"].vol-fader {
       -webkit-appearance: none;
       appearance: none;
-      width: 80px;
-      height: 8px;
-      background: #0f172a;
-      border-radius: 4px;
+      width: 100px;
+      height: 6px;
+      background: #020617;
+      border-radius: 3px;
       transform: rotate(-90deg);
-      margin: 24px 0;
-      touch-action: none;
+      outline: none;
     }
 
     input[type="range"].vol-fader::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 20px;
-      height: 16px;
+      width: 18px;
+      height: 14px;
       background: #f8fafc;
       border-radius: 3px;
       cursor: pointer;
     }
 
-    .crossfader-section {
+    .crossfader-box {
       background: rgba(0,0,0,0.3);
-      padding: 6px;
+      padding: 10px;
       border-radius: 8px;
       border: 1px solid var(--border);
       text-align: center;
     }
 
-    .crossfader-title { font-size: 0.65rem; font-weight: 800; color: var(--text-muted); margin-bottom: 4px; }
+    .crossfader-title { font-size: 0.65rem; font-weight: 900; color: var(--text-muted); margin-bottom: 6px; }
 
     input[type="range"].crossfader {
       -webkit-appearance: none;
       appearance: none;
       width: 100%;
-      height: 12px;
+      height: 10px;
       background: #020617;
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 5px;
       outline: none;
-      touch-action: none;
     }
 
     input[type="range"].crossfader::-webkit-slider-thumb {
@@ -576,30 +532,29 @@
       appearance: none;
       width: 24px;
       height: 28px;
-      background: #e2e8f0;
+      background: #f8fafc;
       border-radius: 4px;
       cursor: ew-resize;
     }
 
-    .rec-section {
-      background: rgba(0, 0, 0, 0.4);
+    /* ACCORDION / CONTAINER ENREGISTREMENT MASTER */
+    .rec-box {
+      background: rgba(0,0,0,0.4);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 6px;
+      padding: 8px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
     }
 
-    .rec-title {
-      font-size: 0.6rem;
-      font-weight: 800;
-      color: #ef4444;
-      text-transform: uppercase;
+    .rec-info {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #ef4444;
     }
 
     .rec-dot {
@@ -607,300 +562,296 @@
       height: 8px;
       border-radius: 50%;
       background: #ef4444;
-      display: inline-block;
     }
 
     .rec-dot.recording { animation: blink 0.8s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-    .rec-controls {
-      display: flex;
-      gap: 6px;
-      width: 100%;
-    }
+    .rec-actions { display: flex; gap: 6px; }
 
-    .btn-rec {
-      flex: 1;
-      background: #991b1b;
-      color: white;
-      font-size: 0.7rem;
-      height: 32px;
-      justify-content: center;
-    }
-
-    .btn-rec.recording {
-      background: #ef4444;
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
-    }
-
-    .btn-export {
-      flex: 1;
-      background: #10b981;
-      color: black;
-      font-size: 0.7rem;
-      font-weight: 800;
-      height: 32px;
-      justify-content: center;
-    }
+    .btn-rec { background: #991b1b; color: white; }
+    .btn-rec.recording { background: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.8); }
+    .btn-export { background: #10b981; color: #000; font-weight: 900; }
 
     footer {
+      background: #020617;
+      border-top: 1px solid var(--border);
+      padding: 4px 8px;
+      font-size: 0.6rem;
+      color: var(--text-muted);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 2px 6px;
-      font-size: 0.6rem;
-      color: var(--text-muted);
-      height: 18px;
       flex-shrink: 0;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>📱 Platines DJ Mobile (Tactile Scratch & Precision Loop)</h1>
-    <button id="btnAudio" class="btn btn-audio">🔊 Activer le Son</button>
-  </header>
+  <!-- BANDEAU ACTIVATION MOBILE -->
+  <div id="audioUnlockBanner">🔊 TOUCHER ICI POUR ACTIVER LE SON SUR MOBILE</div>
 
-  <div class="mobile-tab-bar" id="mobileTabBar">
-    <button class="tab-btn tab-a active" onclick="switchMobileTab('deckA')">DECK A</button>
-    <button class="tab-btn tab-mixer" onclick="switchMobileTab('mixer')">MIXEUR</button>
-    <button class="tab-btn tab-b" onclick="switchMobileTab('deckB')">DECK B</button>
-    <button class="tab-btn" onclick="switchMobileTab('all')">VUE GLOBALE</button>
-  </div>
+  <!-- NAVIGATION ONGLETS MOBILE -->
+  <nav class="mobile-tabs">
+    <button class="tab-btn active" data-tab="deckA">PLATINE A</button>
+    <button class="tab-btn" data-tab="mixer">MIXEUR</button>
+    <button class="tab-btn" data-tab="deckB">PLATINE B</button>
+  </nav>
 
-  <div class="app-container">
+  <!-- CONTENU PRINCIPAL -->
+  <main class="main-content">
     
-    <div class="deck deck-a" id="deckAView">
-      <div class="deck-header">
-        <span class="deck-title">PLATINE A</span>
-        <div class="track-select-wrap">
-          <select id="selectA">
-            <option value="funk">Funk Groove (110 BPM)</option>
-            <option value="disco">Disco Fever (120 BPM)</option>
-            <option value="hiphop">Hip-Hop Beat (90 BPM)</option>
-            <option value="house">House Track (128 BPM)</option>
-          </select>
-          <button class="btn file-btn" onclick="document.getElementById('fileA').click()">📁 MP3</button>
-          <input type="file" id="fileA" class="file-input" accept="audio/*">
-        </div>
-      </div>
-
-      <!-- FADERS HAUT: SPEED & PITCH -->
-      <div class="top-faders-bar">
-        <div class="fader-horizontal-box">
-          <div class="fader-label-wrap">
-            <span>Speed</span>
-            <span class="fader-val-text" id="speedDispA">1.00x</span>
-          </div>
-          <input type="range" class="h-fader" id="speedFaderA" min="0.5" max="1.5" step="0.01" value="1.0">
-        </div>
-
-        <div class="fader-horizontal-box">
-          <div class="fader-label-wrap">
-            <span>Pitch</span>
-            <span class="fader-val-text" id="pitchDispA">0 st</span>
-          </div>
-          <input type="range" class="h-fader" id="pitchFaderA" min="-12" max="12" step="1" value="0">
-        </div>
-      </div>
-
-      <!-- DECK BODY: DUAL LOOP & INTERACTIVE VINYL -->
-      <div class="deck-body">
-        <div class="loop-fader-box">
-          <div class="loop-fader-title">Loop<br>Course</div>
-          <div class="loop-fader-value" id="loopCourseDispA">4s</div>
-          <div class="fader-vertical-wrap">
-            <input type="range" class="v-fader loop-course" id="loopCourseA" min="3" max="18" step="1" value="4">
+    <!-- VUE PLATINE A -->
+    <section id="deckAView" class="view-panel active">
+      <div class="deck-card deck-a-card">
+        <div class="deck-header">
+          <span class="deck-title">PLATINE A</span>
+          <div class="track-select-wrap">
+            <select id="selectA">
+              <option value="funk">Funk (110 BPM)</option>
+              <option value="disco">Disco (120 BPM)</option>
+              <option value="hiphop">Hip-Hop (90 BPM)</option>
+              <option value="house">House (128 BPM)</option>
+            </select>
+            <button class="btn btn-file" onclick="document.getElementById('fileA').click()">📁 MP3</button>
+            <input type="file" id="fileA" class="file-input" accept=".mp3,.m4a,.wav,.aac,.ogg,audio/mpeg,audio/mp4,audio/wav">
           </div>
         </div>
 
-        <div class="turntable-container">
-          <div class="turntable" id="vinylA">
-            <div class="vinyl-grooves"></div>
-            <div class="vinyl-marker"></div>
-            <div class="vinyl-label">
-              <span id="titleA">Funk Groove</span>
-              <span id="bpmA" style="font-size: 0.5rem; opacity: 0.8">110 BPM</span>
+        <!-- REGLAGES HORIZONTAUX DU SPEED & PITCH -->
+        <div class="top-faders-grid">
+          <div class="h-fader-group">
+            <div class="fader-label-row">
+              <span>Vitesse (Speed)</span>
+              <span id="speedDispA" class="fader-val">1.00x</span>
+            </div>
+            <input type="range" class="h-fader" id="speedFaderA" min="0.5" max="1.5" step="0.01" value="1.0">
+          </div>
+
+          <div class="h-fader-group">
+            <div class="fader-label-row">
+              <span>Hauteur (Pitch)</span>
+              <span id="pitchDispA" class="fader-val">0 st</span>
+            </div>
+            <input type="range" class="h-fader" id="pitchFaderA" min="-12" max="12" step="1" value="0">
+          </div>
+        </div>
+
+        <!-- ZONE CENTRALE : DUAL LOOP FADERS + VINYLE INTERACTIF -->
+        <div class="deck-center-body">
+          <!-- LOOP GROSSIER (3s à 18s) -->
+          <div class="loop-fader-card">
+            <span class="loop-fader-title">Course</span>
+            <span id="courseDispA" class="loop-fader-val">4s</span>
+            <div class="v-fader-wrap">
+              <input type="range" class="v-fader" id="courseFaderA" min="3" max="18" step="1" value="4">
             </div>
           </div>
-          <div class="loop-total-display">
-            Loop: <span id="loopTotalDispA">4.00s</span>
+
+          <!-- VINYLE SCRATCH -->
+          <div class="turntable-area">
+            <div class="turntable" id="vinylA">
+              <div class="vinyl-grooves"></div>
+              <div class="vinyl-label">
+                <span id="titleA">Funk Groove</span>
+                <span id="bpmA" style="font-size: 0.5rem; opacity:0.8">110 BPM</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- LOOP FIN (-0.50s à +0.50s) -->
+          <div class="loop-fader-card">
+            <span class="loop-fader-title">Fine</span>
+            <span id="fineDispA" class="loop-fader-val">+0.00s</span>
+            <div class="v-fader-wrap">
+              <input type="range" class="v-fader" id="fineFaderA" min="-0.50" max="0.50" step="0.01" value="0.00">
+            </div>
           </div>
         </div>
 
-        <div class="loop-fader-box">
-          <div class="loop-fader-title">Loop<br>Fine</div>
-          <div class="loop-fader-value" id="loopFineDispA">+0.00s</div>
-          <div class="fader-vertical-wrap">
-            <input type="range" class="v-fader loop-fine" id="loopFineA" min="-0.50" max="0.50" step="0.01" value="0.00">
+        <!-- BARRE DE BOUCLAGE ET BOUTONS MODE -->
+        <div class="loop-action-bar">
+          <div class="loop-btns-group">
+            <button class="btn btn-step" id="btnHalfA">1/2</button>
+            <button class="btn btn-step" id="btnDoubleA">x2</button>
+          </div>
+          <span id="totalLoopDispA" class="total-loop-disp">4.00s</span>
+          <div class="loop-btns-group">
+            <button class="btn btn-loop-mode" id="btnLoopAutoA">AUTO</button>
+            <button class="btn btn-loop-mode" id="btnLoopAllA">LOOP ALL</button>
           </div>
         </div>
-      </div>
 
-      <!-- DECK ACTION CONTROLS -->
-      <div class="deck-controls">
-        <div class="loop-actions-bar">
-          <button class="btn btn-loop" id="btnLoopHalfA">1/2</button>
-          <button class="btn btn-loop" id="btnLoopAutoA">AUTO LOOP</button>
-          <button class="btn btn-loop btn-loop-all" id="btnLoopAllA">♾️ LOOP ALL</button>
-          <button class="btn btn-loop" id="btnLoopDoubleA">x2</button>
-        </div>
-        <div class="playback-row">
+        <!-- LECTURE ET REVERSE -->
+        <div class="deck-controls-row">
           <button class="btn btn-play" id="btnPlayA">START</button>
-          <button class="btn btn-cue" id="btnCUEA">CUE</button>
-          <button class="btn btn-rev" id="btnRevA">⏪ REV</button>
+          <button class="btn btn-rev" id="btnRevA">REV</button>
+          <button class="btn" id="btnCUEA">CUE</button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="mixer" id="mixerView">
-      <div class="mixer-title">MIXEUR CENTRAL</div>
+    <!-- VUE MIXEUR -->
+    <section id="mixerView" class="view-panel">
+      <div class="mixer-card">
+        <div class="mixer-header">MIXEUR CENTRAL 2 CANAUX</div>
 
-      <div class="eq-section">
-        <div class="channel-strip">
-          <span class="ch-label deck-a-text">CH 1</span>
-          <div class="knob-group">
-            <span class="knob-label">HIGH</span>
-            <input type="range" class="knob-slider" id="hiA" min="-12" max="12" value="0">
-          </div>
-          <div class="knob-group">
-            <span class="knob-label">MID</span>
-            <input type="range" class="knob-slider" id="midA" min="-12" max="12" value="0">
-          </div>
-          <div class="knob-group">
-            <span class="knob-label">LOW</span>
-            <input type="range" class="knob-slider" id="lowA" min="-12" max="12" value="0">
-          </div>
-          <div style="height: 60px; display:flex; align-items:center;">
-            <input type="range" class="vol-fader" id="volA" min="0" max="1" step="0.01" value="0.8">
-          </div>
-        </div>
-
-        <div class="channel-strip">
-          <span class="ch-label deck-b-text">CH 2</span>
-          <div class="knob-group">
-            <span class="knob-label">HIGH</span>
-            <input type="range" class="knob-slider" id="hiB" min="-12" max="12" value="0">
-          </div>
-          <div class="knob-group">
-            <span class="knob-label">MID</span>
-            <input type="range" class="knob-slider" id="midB" min="-12" max="12" value="0">
-          </div>
-          <div class="knob-group">
-            <span class="knob-label">LOW</span>
-            <input type="range" class="knob-slider" id="lowB" min="-12" max="12" value="0">
-          </div>
-          <div style="height: 60px; display:flex; align-items:center;">
-            <input type="range" class="vol-fader" id="volB" min="0" max="1" step="0.01" value="0.8">
-          </div>
-        </div>
-      </div>
-
-      <div class="crossfader-section">
-        <div class="crossfader-title">CROSSFADER MASTER</div>
-        <input type="range" class="crossfader" id="crossfader" min="0" max="1" step="0.01" value="0.5">
-      </div>
-
-      <div class="rec-section">
-        <div class="rec-title">
-          <span class="rec-dot" id="recDot"></span>
-          <span>Enregistreur Master</span>
-        </div>
-        <div class="rec-controls">
-          <button class="btn btn-rec" id="btnRec">🔴 REC</button>
-          <button class="btn btn-export" id="btnExport" disabled>💾 WAV</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="deck deck-b" id="deckBView">
-      <div class="deck-header">
-        <span class="deck-title">PLATINE B</span>
-        <div class="track-select-wrap">
-          <select id="selectB">
-            <option value="disco">Disco Fever (120 BPM)</option>
-            <option value="funk">Funk Groove (110 BPM)</option>
-            <option value="hiphop">Hip-Hop Beat (90 BPM)</option>
-            <option value="house">House Track (128 BPM)</option>
-          </select>
-          <button class="btn file-btn" style="background:#ec4899;" onclick="document.getElementById('fileB').click()">📁 MP3</button>
-          <input type="file" id="fileB" class="file-input" accept="audio/*">
-        </div>
-      </div>
-
-      <!-- FADERS HAUT: SPEED & PITCH -->
-      <div class="top-faders-bar">
-        <div class="fader-horizontal-box">
-          <div class="fader-label-wrap">
-            <span>Speed</span>
-            <span class="fader-val-text" id="speedDispB">1.00x</span>
-          </div>
-          <input type="range" class="h-fader" id="speedFaderB" min="0.5" max="1.5" step="0.01" value="1.0">
-        </div>
-
-        <div class="fader-horizontal-box">
-          <div class="fader-label-wrap">
-            <span>Pitch</span>
-            <span class="fader-val-text" id="pitchDispB">0 st</span>
-          </div>
-          <input type="range" class="h-fader" id="pitchFaderB" min="-12" max="12" step="1" value="0">
-        </div>
-      </div>
-
-      <!-- DECK BODY: DUAL LOOP & INTERACTIVE VINYL -->
-      <div class="deck-body">
-        <div class="loop-fader-box">
-          <div class="loop-fader-title">Loop<br>Course</div>
-          <div class="loop-fader-value" id="loopCourseDispB">4s</div>
-          <div class="fader-vertical-wrap">
-            <input type="range" class="v-fader loop-course" id="loopCourseB" min="3" max="18" step="1" value="4">
-          </div>
-        </div>
-
-        <div class="turntable-container">
-          <div class="turntable" id="vinylB">
-            <div class="vinyl-grooves"></div>
-            <div class="vinyl-marker"></div>
-            <div class="vinyl-label">
-              <span id="titleB">Disco Fever</span>
-              <span id="bpmB" style="font-size: 0.5rem; opacity: 0.8">120 BPM</span>
+        <div class="channels-container">
+          <!-- CANAL 1 -->
+          <div class="channel-strip">
+            <span class="ch-title ch-a">CH 1</span>
+            <div class="knob-row">
+              <span class="knob-label">HIGH</span>
+              <input type="range" class="knob" id="hiA" min="-12" max="12" value="0">
+            </div>
+            <div class="knob-row">
+              <span class="knob-label">MID</span>
+              <input type="range" class="knob" id="midA" min="-12" max="12" value="0">
+            </div>
+            <div class="knob-row">
+              <span class="knob-label">LOW</span>
+              <input type="range" class="knob" id="lowA" min="-12" max="12" value="0">
+            </div>
+            <div class="fader-vol-wrap">
+              <input type="range" class="vol-fader" id="volA" min="0" max="1" step="0.01" value="0.8">
             </div>
           </div>
-          <div class="loop-total-display">
-            Loop: <span id="loopTotalDispB">4.00s</span>
+
+          <!-- CANAL 2 -->
+          <div class="channel-strip">
+            <span class="ch-title ch-b">CH 2</span>
+            <div class="knob-row">
+              <span class="knob-label">HIGH</span>
+              <input type="range" class="knob" id="hiB" min="-12" max="12" value="0">
+            </div>
+            <div class="knob-row">
+              <span class="knob-label">MID</span>
+              <input type="range" class="knob" id="midB" min="-12" max="12" value="0">
+            </div>
+            <div class="knob-row">
+              <span class="knob-label">LOW</span>
+              <input type="range" class="knob" id="lowB" min="-12" max="12" value="0">
+            </div>
+            <div class="fader-vol-wrap">
+              <input type="range" class="vol-fader" id="volB" min="0" max="1" step="0.01" value="0.8">
+            </div>
           </div>
         </div>
 
-        <div class="loop-fader-box">
-          <div class="loop-fader-title">Loop<br>Fine</div>
-          <div class="loop-fader-value" id="loopFineDispB">+0.00s</div>
-          <div class="fader-vertical-wrap">
-            <input type="range" class="v-fader loop-fine" id="loopFineB" min="-0.50" max="0.50" step="0.01" value="0.00">
+        <!-- CROSSFADER -->
+        <div class="crossfader-box">
+          <div class="crossfader-title">CROSSFADER</div>
+          <input type="range" class="crossfader" id="crossfader" min="0" max="1" step="0.01" value="0.5">
+        </div>
+
+        <!-- ENREGISTREUR WAV MASTER -->
+        <div class="rec-box">
+          <div class="rec-info">
+            <span class="rec-dot" id="recDot"></span>
+            <span>Master Record</span>
+          </div>
+          <div class="rec-actions">
+            <button class="btn btn-rec" id="btnRec">🔴 REC</button>
+            <button class="btn btn-export" id="btnExport" disabled>💾 WAV</button>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- DECK ACTION CONTROLS -->
-      <div class="deck-controls">
-        <div class="loop-actions-bar">
-          <button class="btn btn-loop" id="btnLoopHalfB">1/2</button>
-          <button class="btn btn-loop" id="btnLoopAutoB">AUTO LOOP</button>
-          <button class="btn btn-loop btn-loop-all" id="btnLoopAllB">♾️ LOOP ALL</button>
-          <button class="btn btn-loop" id="btnLoopDoubleB">x2</button>
+    <!-- VUE PLATINE B -->
+    <section id="deckBView" class="view-panel">
+      <div class="deck-card deck-b-card">
+        <div class="deck-header">
+          <span class="deck-title">PLATINE B</span>
+          <div class="track-select-wrap">
+            <select id="selectB">
+              <option value="disco">Disco (120 BPM)</option>
+              <option value="funk">Funk (110 BPM)</option>
+              <option value="hiphop">Hip-Hop (90 BPM)</option>
+              <option value="house">House (128 BPM)</option>
+            </select>
+            <button class="btn btn-file" style="background:#ec4899;" onclick="document.getElementById('fileB').click()">📁 MP3</button>
+            <input type="file" id="fileB" class="file-input" accept=".mp3,.m4a,.wav,.aac,.ogg,audio/mpeg,audio/mp4,audio/wav">
+          </div>
         </div>
-        <div class="playback-row">
+
+        <!-- REGLAGES HORIZONTAUX DU SPEED & PITCH -->
+        <div class="top-faders-grid">
+          <div class="h-fader-group">
+            <div class="fader-label-row">
+              <span>Vitesse (Speed)</span>
+              <span id="speedDispB" class="fader-val">1.00x</span>
+            </div>
+            <input type="range" class="h-fader" id="speedFaderB" min="0.5" max="1.5" step="0.01" value="1.0">
+          </div>
+
+          <div class="h-fader-group">
+            <div class="fader-label-row">
+              <span>Hauteur (Pitch)</span>
+              <span id="pitchDispB" class="fader-val">0 st</span>
+            </div>
+            <input type="range" class="h-fader" id="pitchFaderB" min="-12" max="12" step="1" value="0">
+          </div>
+        </div>
+
+        <!-- ZONE CENTRALE : DUAL LOOP FADERS + VINYLE INTERACTIF -->
+        <div class="deck-center-body">
+          <!-- LOOP GROSSIER (3s à 18s) -->
+          <div class="loop-fader-card">
+            <span class="loop-fader-title">Course</span>
+            <span id="courseDispB" class="loop-fader-val">4s</span>
+            <div class="v-fader-wrap">
+              <input type="range" class="v-fader" id="courseFaderB" min="3" max="18" step="1" value="4">
+            </div>
+          </div>
+
+          <!-- VINYLE SCRATCH -->
+          <div class="turntable-area">
+            <div class="turntable" id="vinylB">
+              <div class="vinyl-grooves"></div>
+              <div class="vinyl-label">
+                <span id="titleB">Disco Fever</span>
+                <span id="bpmB" style="font-size: 0.5rem; opacity:0.8">120 BPM</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- LOOP FIN (-0.50s à +0.50s) -->
+          <div class="loop-fader-card">
+            <span class="loop-fader-title">Fine</span>
+            <span id="fineDispB" class="loop-fader-val">+0.00s</span>
+            <div class="v-fader-wrap">
+              <input type="range" class="v-fader" id="fineFaderB" min="-0.50" max="0.50" step="0.01" value="0.00">
+            </div>
+          </div>
+        </div>
+
+        <!-- BARRE DE BOUCLAGE ET BOUTONS MODE -->
+        <div class="loop-action-bar">
+          <div class="loop-btns-group">
+            <button class="btn btn-step" id="btnHalfB">1/2</button>
+            <button class="btn btn-step" id="btnDoubleB">x2</button>
+          </div>
+          <span id="totalLoopDispB" class="total-loop-disp">4.00s</span>
+          <div class="loop-btns-group">
+            <button class="btn btn-loop-mode" id="btnLoopAutoB">AUTO</button>
+            <button class="btn btn-loop-mode" id="btnLoopAllB">LOOP ALL</button>
+          </div>
+        </div>
+
+        <!-- LECTURE ET REVERSE -->
+        <div class="deck-controls-row">
           <button class="btn btn-play" id="btnPlayB">START</button>
-          <button class="btn btn-cue" id="btnCUEB">CUE</button>
-          <button class="btn btn-rev" id="btnRevB">⏪ REV</button>
+          <button class="btn btn-rev" id="btnRevB">REV</button>
+          <button class="btn" id="btnCUEB">CUE</button>
         </div>
       </div>
-    </div>
+    </section>
 
-  </div>
+  </main>
 
   <footer>
-    <span>DJ Mobile - Scratch Tactile Haute Réponse</span>
+    <span>Dual DJ Mixer Mobile - Dual Precision Loop & Scratch Engine</span>
     <span id="status">Audio Inactif</span>
   </footer>
 
@@ -912,109 +863,83 @@
     let recordedChunks = [];
     let recordedAudioBlob = null;
 
-    // Mobile View Tab Switcher Logic
-    function switchMobileTab(viewName) {
-      const isMobile = window.innerWidth < 900;
-      if (!isMobile) return;
+    // GESTIONNAIRE DES ONGLETS MOBILE
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const viewPanels = {
+      deckA: document.getElementById('deckAView'),
+      mixer: document.getElementById('mixerView'),
+      deckB: document.getElementById('deckBView')
+    };
 
-      const deckA = document.getElementById('deckAView');
-      const deckB = document.getElementById('deckBView');
-      const mixer = document.getElementById('mixerView');
-      const buttons = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-      buttons.forEach(btn => btn.classList.remove('active'));
-
-      if (viewName === 'deckA') {
-        deckA.style.display = 'flex';
-        deckB.style.display = 'none';
-        mixer.style.display = 'none';
-        buttons[0].classList.add('active');
-      } else if (viewName === 'mixer') {
-        deckA.style.display = 'none';
-        deckB.style.display = 'none';
-        mixer.style.display = 'flex';
-        buttons[1].classList.add('active');
-      } else if (viewName === 'deckB') {
-        deckA.style.display = 'none';
-        deckB.style.display = 'flex';
-        mixer.style.display = 'none';
-        buttons[2].classList.add('active');
-      } else if (viewName === 'all') {
-        deckA.style.display = 'flex';
-        deckB.style.display = 'flex';
-        mixer.style.display = 'flex';
-        buttons[3].classList.add('active');
-      }
-    }
-
-    // Auto-setup responsive view on start
-    window.addEventListener('resize', () => {
-      if (window.innerWidth >= 900) {
-        document.getElementById('deckAView').style.display = 'flex';
-        document.getElementById('deckBView').style.display = 'flex';
-        document.getElementById('mixerView').style.display = 'flex';
-      } else {
-        switchMobileTab('deckA');
-      }
+        Object.keys(viewPanels).forEach(key => {
+          if (key === targetTab) {
+            viewPanels[key].classList.add('active');
+          } else {
+            viewPanels[key].classList.remove('active');
+          }
+        });
+      });
     });
 
+    // CLASSE PLATINE DE MIXAGE
     class DJDeck {
       constructor(id) {
         this.id = id;
         this.isPlaying = false;
+        this.isReverse = false;
         this.buffer = null;
-        this.reversedBuffer = null;
         this.source = null;
         this.speed = 1.0;
         this.pitchSemitones = 0;
-        this.isReversed = false;
-        
-        // Touch Scratch Engine State
-        this.isScratching = false;
-        this.rotationAngle = 0;
-        this.lastPointerAngle = 0;
-        this.lastScratchTimestamp = 0;
-        this.scratchDirection = 1;
-        this.activePointerId = null;
 
-        // Loop Controls
-        this.loopCourseVal = 4;
-        this.loopFineVal = 0.0;
-        this.loopMode = false;
-        this.loopAllMode = false;
-        
+        // Configuration Loop
+        this.courseVal = 4;
+        this.fineVal = 0.00;
+        this.loopMode = 'OFF'; // 'OFF', 'AUTO', 'ALL'
         this.startTime = 0;
         this.pauseOffset = 0;
 
-        // DOM References
+        // Propriétés de Scratching Tactile
+        this.isScratching = false;
+        this.lastAngle = 0;
+        this.lastTime = 0;
+        this.scratchVelocity = 0;
+
+        // UI References
         this.btnPlay = document.getElementById(`btnPlay${id}`);
-        this.btnCue = document.getElementById(`btnCUE${id}`);
         this.btnRev = document.getElementById(`btnRev${id}`);
+        this.btnCue = document.getElementById(`btnCUE${id}`);
         this.vinyl = document.getElementById(`vinyl${id}`);
         this.select = document.getElementById(`select${id}`);
         this.fileInput = document.getElementById(`file${id}`);
-        
+
         this.speedFader = document.getElementById(`speedFader${id}`);
         this.speedDisp = document.getElementById(`speedDisp${id}`);
         this.pitchFader = document.getElementById(`pitchFader${id}`);
         this.pitchDisp = document.getElementById(`pitchDisp${id}`);
 
-        this.loopCourseFader = document.getElementById(`loopCourse${id}`);
-        this.loopCourseDisp = document.getElementById(`loopCourseDisp${id}`);
-        this.loopFineFader = document.getElementById(`loopFine${id}`);
-        this.loopFineDisp = document.getElementById(`loopFineDisp${id}`);
-        this.loopTotalDisp = document.getElementById(`loopTotalDisp${id}`);
-        
+        this.courseFader = document.getElementById(`courseFader${id}`);
+        this.courseDisp = document.getElementById(`courseDisp${id}`);
+        this.fineFader = document.getElementById(`fineFader${id}`);
+        this.fineDisp = document.getElementById(`fineDisp${id}`);
+        this.totalLoopDisp = document.getElementById(`totalLoopDisp${id}`);
+
+        this.btnHalf = document.getElementById(`btnHalf${id}`);
+        this.btnDouble = document.getElementById(`btnDouble${id}`);
         this.btnLoopAuto = document.getElementById(`btnLoopAuto${id}`);
         this.btnLoopAll = document.getElementById(`btnLoopAll${id}`);
-        this.btnLoopHalf = document.getElementById(`btnLoopHalf${id}`);
-        this.btnLoopDouble = document.getElementById(`btnLoopDouble${id}`);
 
         this.titleEl = document.getElementById(`title${id}`);
         this.bpmEl = document.getElementById(`bpm${id}`);
 
-        this.initUI();
-        this.startVinylLoop();
+        this.initEvents();
       }
 
       initAudioNodes() {
@@ -1042,24 +967,38 @@
         this.xfadeGain.connect(masterGain);
       }
 
-      createReversedBuffer(buf) {
-        if (!buf || !audioCtx) return null;
-        const revBuf = audioCtx.createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate);
-        for (let i = 0; i < buf.numberOfChannels; i++) {
-          const srcData = buf.getChannelData(i);
-          const revData = revBuf.getChannelData(i);
-          for (let j = 0; j < buf.length; j++) {
-            revData[j] = srcData[buf.length - 1 - j];
-          }
-        }
-        return revBuf;
+      getCalculatedLoopDuration() {
+        const dur = this.courseVal + this.fineVal;
+        return Math.max(0.1, Math.round(dur * 100) / 100);
       }
 
-      initUI() {
+      updateLoopDisplay() {
+        this.courseDisp.textContent = `${this.courseVal}s`;
+        this.fineDisp.textContent = `${this.fineVal >= 0 ? '+' : ''}${this.fineVal.toFixed(2)}s`;
+        
+        if (this.loopMode === 'ALL') {
+          this.totalLoopDisp.textContent = "LOOP ALL (FULL)";
+        } else {
+          this.totalLoopDisp.textContent = `${this.getCalculatedLoopDuration().toFixed(2)}s`;
+        }
+      }
+
+      initEvents() {
         this.btnPlay.addEventListener('click', () => this.togglePlay());
         this.btnCue.addEventListener('click', () => { this.stop(); this.play(0); });
-        this.btnRev.addEventListener('click', () => this.toggleReverse());
 
+        // Reverse Playback
+        this.btnRev.addEventListener('click', () => {
+          this.isReverse = !this.isReverse;
+          this.btnRev.classList.toggle('active', this.isReverse);
+          this.updateVinylAnimation();
+          if (this.isPlaying) {
+            const currentPos = this.getCurrentPosition();
+            this.play(currentPos);
+          }
+        });
+
+        // Speed & Pitch
         this.speedFader.addEventListener('input', (e) => {
           this.speed = parseFloat(e.target.value);
           this.speedDisp.textContent = this.speed.toFixed(2) + 'x';
@@ -1072,290 +1011,175 @@
           this.updatePlaybackRate();
         });
 
-        this.loopCourseFader.addEventListener('input', (e) => {
-          this.loopCourseVal = parseInt(e.target.value);
-          this.loopCourseDisp.textContent = this.loopCourseVal + 's';
-          this.updateLoopCalculations();
+        // Dual Precision Loop Controls
+        this.courseFader.addEventListener('input', (e) => {
+          this.courseVal = parseInt(e.target.value);
+          this.updateLoopDisplay();
+          this.applyLoopBounds();
         });
 
-        this.loopFineFader.addEventListener('input', (e) => {
-          this.loopFineVal = parseFloat(e.target.value);
-          const sign = this.loopFineVal >= 0 ? '+' : '';
-          this.loopFineDisp.textContent = `${sign}${this.loopFineVal.toFixed(2)}s`;
-          this.updateLoopCalculations();
+        this.fineFader.addEventListener('input', (e) => {
+          this.fineVal = parseFloat(e.target.value);
+          this.updateLoopDisplay();
+          this.applyLoopBounds();
         });
 
-        this.btnLoopAuto.addEventListener('click', () => this.toggleAutoLoopMode());
-        this.btnLoopAll.addEventListener('click', () => this.toggleLoopAllMode());
-
-        this.btnLoopHalf.addEventListener('click', () => {
-          let newVal = Math.max(3, Math.floor(this.loopCourseVal / 2));
-          this.loopCourseFader.value = newVal;
-          this.loopCourseVal = newVal;
-          this.loopCourseDisp.textContent = newVal + 's';
-          this.updateLoopCalculations();
+        this.btnHalf.addEventListener('click', () => {
+          this.courseVal = Math.max(3, Math.floor(this.courseVal / 2));
+          this.courseFader.value = this.courseVal;
+          this.updateLoopDisplay();
+          this.applyLoopBounds();
         });
 
-        this.btnLoopDouble.addEventListener('click', () => {
-          let newVal = Math.min(18, Math.ceil(this.loopCourseVal * 2));
-          this.loopCourseFader.value = newVal;
-          this.loopCourseVal = newVal;
-          this.loopCourseDisp.textContent = newVal + 's';
-          this.updateLoopCalculations();
+        this.btnDouble.addEventListener('click', () => {
+          this.courseVal = Math.min(18, this.courseVal * 2);
+          this.courseFader.value = this.courseVal;
+          this.updateLoopDisplay();
+          this.applyLoopBounds();
+        });
+
+        this.btnLoopAuto.addEventListener('click', () => {
+          this.setLoopMode(this.loopMode === 'AUTO' ? 'OFF' : 'AUTO');
+        });
+
+        this.btnLoopAll.addEventListener('click', () => {
+          this.setLoopMode(this.loopMode === 'ALL' ? 'OFF' : 'ALL');
         });
 
         this.select.addEventListener('change', (e) => this.loadPreset(e.target.value));
 
-        this.fileInput.addEventListener('change', (e) => {
+        // IMPORTATION DE FICHIER AUDIO COMPATIBLE IOS SAFARI
+        this.fileInput.addEventListener('change', async (e) => {
           const file = e.target.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              audioCtx.decodeAudioData(event.target.result, (buf) => {
-                this.buffer = buf;
-                this.reversedBuffer = this.createReversedBuffer(buf);
-                this.titleEl.textContent = file.name.substring(0, 10);
-                this.bpmEl.textContent = "Custom MP3";
+          if (!file) return;
+
+          initAudioSystem();
+
+          try {
+            const arrayBuffer = await new Response(file).arrayBuffer();
+            const bufferCopy = arrayBuffer.slice(0);
+
+            audioCtx.decodeAudioData(
+              bufferCopy,
+              (decodedBuffer) => {
+                this.buffer = decodedBuffer;
+                this.titleEl.textContent = file.name.length > 10 ? file.name.substring(0, 10) + '...' : file.name;
+                this.bpmEl.textContent = "Custom";
                 if (this.isPlaying) this.play(0);
-              });
-            };
-            reader.readAsArrayBuffer(file);
+              },
+              (err) => {
+                alert("Impossible de lire ce fichier audio. Essayez un format MP3 ou WAV valide.");
+              }
+            );
+          } catch (err) {
+            alert("Erreur lors de l'accès au fichier.");
           }
         });
 
+        // Contrôles de la Table de Mixage
         document.getElementById(`vol${this.id}`).addEventListener('input', (e) => { if (this.gainNode) this.gainNode.gain.value = parseFloat(e.target.value); });
         document.getElementById(`low${this.id}`).addEventListener('input', (e) => { if (this.lowEq) this.lowEq.gain.value = parseFloat(e.target.value); });
         document.getElementById(`mid${this.id}`).addEventListener('input', (e) => { if (this.midEq) this.midEq.gain.value = parseFloat(e.target.value); });
         document.getElementById(`hi${this.id}`).addEventListener('input', (e) => { if (this.hiEq) this.hiEq.gain.value = parseFloat(e.target.value); });
 
-        const onPointerDown = (e) => {
-          initAudioSystem();
-          if (!this.buffer) return;
+        // Configuration du Scratching Tactile sur le Vinyle
+        this.setupScratchEvents();
+      }
 
-          this.isScratching = true;
-          this.activePointerId = e.pointerId;
-          this.vinyl.setPointerCapture(e.pointerId);
-          this.vinyl.classList.add('scratching');
-
-          if (this.source) {
-            this.pauseOffset = this.getCurrentPosition();
-            try { this.source.stop(); } catch(err) {}
-            this.source = null;
-          }
-
-          this.lastPointerAngle = this.getPointerAngle(e.clientX, e.clientY);
-          this.lastScratchTimestamp = performance.now();
-          this.scratchDirection = 1;
-
-          this.initScratchSource(this.pauseOffset, 1);
+      setupScratchEvents() {
+        const getAngle = (e) => {
+          const rect = this.vinyl.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+          const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+          return Math.atan2(clientY - centerY, clientX - centerX);
         };
 
-        const onPointerMove = (e) => {
-          if (!this.isScratching || e.pointerId !== this.activePointerId || !this.buffer) return;
+        const startScratch = (e) => {
+          if (!this.buffer) return;
+          initAudioSystem();
+          this.isScratching = true;
+          this.lastAngle = getAngle(e);
+          this.lastTime = performance.now();
+          this.vinyl.style.animationPlayState = 'paused';
+        };
 
-          const currentAngle = this.getPointerAngle(e.clientX, e.clientY);
-          let deltaAngle = currentAngle - this.lastPointerAngle;
-
+        const moveScratch = (e) => {
+          if (!this.isScratching || !this.source) return;
+          e.preventDefault();
+          const currentAngle = getAngle(e);
+          const currentTime = performance.now();
+          
+          let deltaAngle = currentAngle - this.lastAngle;
           if (deltaAngle > Math.PI) deltaAngle -= Math.PI * 2;
           if (deltaAngle < -Math.PI) deltaAngle += Math.PI * 2;
 
-          const now = performance.now();
-          const dt = (now - this.lastScratchTimestamp) / 1000;
-
-          if (dt > 0.002) {
-            this.rotationAngle += deltaAngle * (180 / Math.PI);
-            this.vinyl.style.transform = `rotate(${this.rotationAngle}deg)`;
-
-            const angularVelocity = deltaAngle / dt;
-            let calcRate = angularVelocity / 3.45; // Normalized to 33 RPM standard
-
-            this.updateScratchAudioEngine(calcRate);
-
-            this.lastPointerAngle = currentAngle;
-            this.lastScratchTimestamp = now;
+          const deltaTime = (currentTime - this.lastTime) / 1000;
+          if (deltaTime > 0) {
+            this.scratchVelocity = (deltaAngle / (Math.PI * 2)) / deltaTime;
+            let targetRate = this.scratchVelocity * (this.isReverse ? -1 : 1);
+            
+            if (Math.abs(targetRate) < 0.05) targetRate = 0;
+            this.source.playbackRate.setValueAtTime(targetRate, audioCtx.currentTime);
           }
+
+          this.lastAngle = currentAngle;
+          this.lastTime = currentTime;
         };
 
-        const onPointerUp = (e) => {
-          if (!this.isScratching || e.pointerId !== this.activePointerId) return;
+        const endScratch = () => {
+          if (!this.isScratching) return;
           this.isScratching = false;
-          this.activePointerId = null;
-          this.vinyl.classList.remove('scratching');
-
-          if (this.source) {
-            try { this.source.stop(); } catch(err) {}
-            this.source = null;
-          }
-
-          if (this.isPlaying) {
-            this.play(this.pauseOffset);
-          }
+          this.updateVinylAnimation();
+          this.updatePlaybackRate();
         };
 
-        this.vinyl.addEventListener('pointerdown', onPointerDown);
-        this.vinyl.addEventListener('pointermove', onPointerMove);
-        this.vinyl.addEventListener('pointerup', onPointerUp);
-        this.vinyl.addEventListener('pointercancel', onPointerUp);
+        this.vinyl.addEventListener('pointerdown', startScratch);
+        window.addEventListener('pointermove', moveScratch);
+        window.addEventListener('pointerup', endScratch);
+        window.addEventListener('pointercancel', endScratch);
       }
 
-      initScratchSource(offsetSec, dir) {
-        if (!audioCtx || !this.buffer) return;
-
-        if (this.source) {
-          try { this.source.stop(); } catch(e) {}
-        }
-
-        const activeBuf = (dir < 0) ? 
-          (this.isReversed ? this.buffer : this.reversedBuffer) : 
-          (this.isReversed ? this.reversedBuffer : this.buffer);
-
-        let startPos = offsetSec;
-        if (dir < 0) {
-          startPos = Math.max(0, activeBuf.duration - offsetSec);
-        }
-
-        this.source = audioCtx.createBufferSource();
-        this.source.buffer = activeBuf;
-        this.source.loop = true;
-        this.source.loopStart = 0;
-        this.source.loopEnd = activeBuf.duration;
-        this.source.playbackRate.value = 0.0001;
-
-        this.source.connect(this.gainNode);
-        this.source.start(0, startPos);
-        this.scratchDirection = dir;
+      setLoopMode(mode) {
+        this.loopMode = mode;
+        this.btnLoopAuto.classList.toggle('active', mode === 'AUTO');
+        this.btnLoopAll.classList.toggle('active', mode === 'ALL');
+        this.updateLoopDisplay();
+        this.applyLoopBounds();
       }
 
-      updateScratchAudioEngine(calcRate) {
-        if (!this.buffer || !this.isScratching) return;
+      applyLoopBounds() {
+        if (!this.isPlaying || !this.source || !this.buffer) return;
 
-        const curBuf = this.getActiveBuffer();
-        const absRate = Math.min(Math.abs(calcRate), 5.0);
-        const newDir = calcRate < 0 ? -1 : 1;
-
-        if (newDir !== this.scratchDirection && absRate > 0.05) {
-          this.initScratchSource(this.pauseOffset, newDir);
-        }
-
-        if (this.source && this.source.playbackRate) {
-          const effectiveRate = absRate < 0.03 ? 0.00001 : absRate;
-          this.source.playbackRate.setTargetAtTime(effectiveRate, audioCtx.currentTime, 0.015);
-
-          const dt = (performance.now() - this.lastScratchTimestamp) / 1000;
-          this.pauseOffset = (this.pauseOffset + (calcRate * dt)) % curBuf.duration;
-          if (this.pauseOffset < 0) this.pauseOffset += curBuf.duration;
-        }
-      }
-
-      getTotalLoopDuration() {
-        const duration = this.loopCourseVal + this.loopFineVal;
-        return Math.max(1.0, Math.round(duration * 100) / 100);
-      }
-
-      updateLoopCalculations() {
-        if (this.loopAllMode) {
-          this.loopTotalDisp.textContent = "ALL (FULL)";
-          return;
-        }
-
-        const total = this.getTotalLoopDuration();
-        this.loopTotalDisp.textContent = total.toFixed(2) + 's';
-
-        if (this.loopMode && this.source && this.isPlaying && !this.isScratching) {
-          const curBuf = this.getActiveBuffer();
-          if (curBuf) {
-            this.source.loopEnd = Math.min(this.source.loopStart + total, curBuf.duration);
-          }
-        }
-      }
-
-      toggleAutoLoopMode() {
-        if (this.loopAllMode) {
-          this.loopAllMode = false;
-          this.btnLoopAll.classList.remove('active');
-        }
-
-        this.loopMode = !this.loopMode;
-        this.btnLoopAuto.classList.toggle('active', this.loopMode);
-
-        this.applyLoopState();
-      }
-
-      toggleLoopAllMode() {
-        if (this.loopMode) {
-          this.loopMode = false;
-          this.btnLoopAuto.classList.remove('active');
-        }
-
-        this.loopAllMode = !this.loopAllMode;
-        this.btnLoopAll.classList.toggle('active', this.loopAllMode);
-
-        if (this.loopAllMode) {
-          this.loopTotalDisp.textContent = "ALL (FULL)";
-        } else {
-          this.updateLoopCalculations();
-        }
-
-        this.applyLoopState();
-      }
-
-      applyLoopState() {
-        if (this.isPlaying && this.source && this.buffer && !this.isScratching) {
+        if (this.loopMode === 'AUTO') {
           const currentPos = this.getCurrentPosition();
-          const curBuf = this.getActiveBuffer();
-          
-          if (this.loopAllMode) {
-            this.source.loopStart = 0;
-            this.source.loopEnd = curBuf.duration;
-            this.source.loop = true;
-          } else if (this.loopMode) {
-            const totalDuration = this.getTotalLoopDuration();
-            this.source.loopStart = currentPos;
-            this.source.loopEnd = Math.min(currentPos + totalDuration, curBuf.duration);
-            this.source.loop = true;
-          } else {
-            this.source.loop = false;
-          }
+          const duration = this.getCalculatedLoopDuration();
+          this.source.loopStart = currentPos;
+          this.source.loopEnd = Math.min(currentPos + duration, this.buffer.duration);
+          this.source.loop = true;
+        } else if (this.loopMode === 'ALL') {
+          this.source.loopStart = 0;
+          this.source.loopEnd = this.buffer.duration;
+          this.source.loop = true;
+        } else {
+          this.source.loop = false;
         }
-      }
-
-      getPointerAngle(x, y) {
-        const rect = this.vinyl.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        return Math.atan2(y - centerY, x - centerX);
-      }
-
-      toggleReverse() {
-        initAudioSystem();
-        const currentPos = this.getCurrentPosition();
-        this.isReversed = !this.isReversed;
-        this.btnRev.classList.toggle('active', this.isReversed);
-
-        if (this.buffer) {
-          const newOffset = Math.max(0, this.buffer.duration - currentPos);
-          if (this.isPlaying) {
-            this.play(newOffset);
-          } else {
-            this.pauseOffset = newOffset;
-          }
-        }
-      }
-
-      getActiveBuffer() {
-        return this.isReversed ? this.reversedBuffer : this.buffer;
       }
 
       getCombinedRate() {
         const pitchFactor = Math.pow(2, this.pitchSemitones / 12);
-        return this.speed * pitchFactor;
+        const baseRate = this.speed * pitchFactor;
+        return this.isReverse ? -baseRate : baseRate;
       }
 
       getCurrentPosition() {
-        const curBuf = this.getActiveBuffer();
-        if (!this.isPlaying || !curBuf) return this.pauseOffset;
-        const elapsed = (audioCtx.currentTime - this.startTime) * this.getCombinedRate();
-        return (this.pauseOffset + elapsed) % curBuf.duration;
+        if (!this.isPlaying || !this.buffer) return this.pauseOffset;
+        const elapsed = (audioCtx.currentTime - this.startTime) * Math.abs(this.getCombinedRate());
+        if (this.isReverse) {
+          return Math.max(0, (this.pauseOffset - elapsed) % this.buffer.duration);
+        }
+        return (this.pauseOffset + elapsed) % this.buffer.duration;
       }
 
       updatePlaybackRate() {
@@ -1366,6 +1190,20 @@
         }
       }
 
+      updateVinylAnimation() {
+        if (!this.isPlaying) {
+          this.vinyl.classList.remove('spinning', 'spinning-rev');
+          return;
+        }
+        if (this.isReverse) {
+          this.vinyl.classList.remove('spinning');
+          this.vinyl.classList.add('spinning-rev');
+        } else {
+          this.vinyl.classList.remove('spinning-rev');
+          this.vinyl.classList.add('spinning');
+        }
+      }
+
       togglePlay() {
         initAudioSystem();
         if (this.isPlaying) this.stop();
@@ -1373,31 +1211,17 @@
       }
 
       play(offset = 0) {
-        const activeBuf = this.getActiveBuffer();
-        if (!activeBuf) return;
-        if (this.source) {
-          try { this.source.stop(); } catch(e){}
-        }
+        if (!this.buffer) return;
+        if (this.source) this.source.stop();
 
         this.source = audioCtx.createBufferSource();
-        this.source.buffer = activeBuf;
+        this.source.buffer = this.buffer;
         this.source.playbackRate.value = this.getCombinedRate();
 
         this.pauseOffset = offset;
         this.startTime = audioCtx.currentTime;
 
-        if (this.loopAllMode) {
-          this.source.loop = true;
-          this.source.loopStart = 0;
-          this.source.loopEnd = activeBuf.duration;
-        } else if (this.loopMode) {
-          const totalDuration = this.getTotalLoopDuration();
-          this.source.loop = true;
-          this.source.loopStart = offset;
-          this.source.loopEnd = Math.min(offset + totalDuration, activeBuf.duration);
-        } else {
-          this.source.loop = false;
-        }
+        this.applyLoopBounds();
 
         this.source.connect(this.gainNode);
         this.source.start(0, offset);
@@ -1405,30 +1229,19 @@
         this.isPlaying = true;
         this.btnPlay.textContent = "STOP";
         this.btnPlay.classList.add('playing');
+        this.updateVinylAnimation();
       }
 
       stop() {
         if (this.source) {
           this.pauseOffset = this.getCurrentPosition();
-          try { this.source.stop(); } catch(e){}
+          this.source.stop();
           this.source = null;
         }
         this.isPlaying = false;
         this.btnPlay.textContent = "START";
         this.btnPlay.classList.remove('playing');
-      }
-
-      startVinylLoop() {
-        const updateVinyl = () => {
-          if (this.isPlaying && !this.isScratching) {
-            const dir = this.isReversed ? -1 : 1;
-            const degPerSec = (360 / 1.8) * this.getCombinedRate() * dir;
-            this.rotationAngle += degPerSec * (1 / 60);
-            this.vinyl.style.transform = `rotate(${this.rotationAngle}deg)`;
-          }
-          requestAnimationFrame(updateVinyl);
-        };
-        requestAnimationFrame(updateVinyl);
+        this.updateVinylAnimation();
       }
 
       loadPreset(presetKey) {
@@ -1455,7 +1268,6 @@
         }
 
         this.buffer = buf;
-        this.reversedBuffer = this.createReversedBuffer(buf);
         this.pauseOffset = 0;
         if (this.isPlaying) this.play(0);
       }
@@ -1464,13 +1276,11 @@
     const deckA = new DJDeck('A');
     const deckB = new DJDeck('B');
 
-    // Initial setup for mobile view
-    switchMobileTab('deckA');
-
+    // INITIALISATION DU MOTEUR AUDIO MOBILE
     function initAudioSystem() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
+
         masterGain = audioCtx.createGain();
         masterGain.connect(audioCtx.destination);
 
@@ -1481,17 +1291,20 @@
         deckB.initAudioNodes();
         deckA.loadPreset('funk');
         deckB.loadPreset('disco');
-        
-        document.getElementById('btnAudio').style.display = 'none';
+
+        document.getElementById('audioUnlockBanner').style.display = 'none';
         document.getElementById('status').textContent = "Audio Actif";
       }
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
     }
 
-    document.getElementById('btnAudio').addEventListener('click', initAudioSystem);
+    document.getElementById('audioUnlockBanner').addEventListener('click', initAudioSystem);
     document.body.addEventListener('touchstart', initAudioSystem, { once: true });
 
-    // Master Crossfader logic
+    // CROSSFADER
     const crossfader = document.getElementById('crossfader');
     crossfader.addEventListener('input', (e) => {
       const val = parseFloat(e.target.value);
@@ -1499,7 +1312,7 @@
       if (deckB.xfadeGain) deckB.xfadeGain.gain.value = Math.sin(val * 0.5 * Math.PI);
     });
 
-    // Master Audio Recorder & Export
+    // ENREGISTREUR WAV MASTER
     const btnRec = document.getElementById('btnRec');
     const btnExport = document.getElementById('btnExport');
     const recDot = document.getElementById('recDot');
@@ -1523,7 +1336,7 @@
         const audioBlob = new Blob(recordedChunks, { type: 'audio/webm' });
         const arrayBuffer = await audioBlob.arrayBuffer();
         const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-        
+
         recordedAudioBlob = bufferToWavBlob(decodedBuffer);
         btnExport.disabled = false;
       };
@@ -1546,13 +1359,14 @@
       recDot.classList.remove('recording');
     }
 
+    // EXPORTATION DU FICHIER WAV ENCODE PCM 16-BIT
     btnExport.addEventListener('click', () => {
       if (!recordedAudioBlob) return;
       const url = URL.createObjectURL(recordedAudioBlob);
       const a = document.createElement('a');
       a.style.display = 'none';
       a.href = url;
-      a.download = `dj-mix-mobile-${Date.now()}.wav`;
+      a.download = `dj-mix-session-${Date.now()}.wav`;
       document.body.appendChild(a);
       a.click();
       setTimeout(() => {
