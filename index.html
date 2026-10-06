@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Platines DJ Dual Mobile - Precision Scratch & Dual Loop</title>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    :root {
+      --bg: #090d16;
+      --panel: #131b2e;
+      --card: #1e293b;
+      --border: #334155;
+      --accent-a: #3b82f6;
+      --accent-b: #ec4899;
+      --accent-rev: #f59e0b;
+      --accent-loop-all: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      touch-action: none;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      padding: 6px;
+      padding-bottom: max(6px, env(safe-area-inset-bottom));
+      padding-top: max(6px, env(safe-area-inset-top));
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--panel);
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 6px;
+      height: 42px;
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-size: 0.8rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #60a5fa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn {
+      background: var(--border);
+      color: var(--text);
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .btn:active { transform: scale(0.95); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-audio { background: #8b5cf6; color: white; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+    /* Mobile View Selector Bar */
+    .mobile-tab-bar {
+      display: flex;
+      gap: 4px;
+      background: rgba(0,0,0,0.4);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 6px 2px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
+    }
+
+    .tab-btn.tab-b.active {
+      background: #db2777;
+      box-shadow: 0 0 8px rgba(219, 39, 119, 0.6);
+    }
+
+    .tab-btn.tab-mixer.active {
+      background: #059669;
+      box-shadow: 0 0 8px rgba(5, 150, 105, 0.6);
+    }
+
+    .app-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      min-height: 0;
+      position: relative;
+    }
+
+    @media (min-width: 900px) {
+      .mobile-tab-bar { display: none; }
+      .app-container {
+        grid-template-columns: 1fr 220px 1fr;
+      }
+      .deck, .mixer { display: flex !important; }
+    }
+
+    .deck {
+      background: var(--panel);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+      height: 100%;
+      min-height: 0;
+      position: relative;
+    }
+
+    .deck-a { border-top: 4px solid var(--accent-a); }
+    .deck-b { border-top: 4px solid var(--accent-b); }
+
+    .deck-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      background: rgba(0,0,0,0.3);
+      padding: 6px 8px;
+      border-radius: 8px;
+    }
+
+    .deck-title { font-weight: 800; font-size: 0.85rem; }
+    .deck-a .deck-title { color: var(--accent-a); }
+    .deck-b .deck-title { color: var(--accent-b); }
+
+    .track-select-wrap { display: flex; gap: 4px; align-items: center; }
+
+    select {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      max-width: 115px;
+    }
+
+    .file-btn { font-size: 0.65rem; padding: 4px 8px; background: #3b82f6; }
+    .file-input { display: none; }
+
+    .top-faders-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px;
+    }
+
+    .fader-horizontal-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .fader-label-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .fader-val-text {
+      color: #38bdf8;
+      font-family: monospace;
+      font-size: 0.7rem;
+    }
+
+    input[type="range"].h-fader {
+      width: 100%;
+      height: 12px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      accent-color: #38bdf8;
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    .deck-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 62px 1fr 62px;
+      gap: 6px;
+      align-items: center;
+      min-height: 0;
+    }
+
+    .loop-fader-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      max-height: 220px;
+    }
+
+    .loop-fader-title {
+      font-size: 0.58rem;
+      font-weight: 800;
+      color: #f59e0b;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .loop-fader-value {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #fcd34d;
+      font-family: monospace;
+      text-align: center;
+    }
+
+    .fader-vertical-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    input[type="range"].v-fader {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 110px;
+      height: 10px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      transform: rotate(-90deg);
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    input[type="range"].v-fader.loop-course::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 18px;
+      background: #f59e0b;
+      border-radius: 4px;
+      cursor: grab;
+    }
+
+    input[type="range"].v-fader.loop-fine::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 18px;
+      background: #10b981;
+      border-radius: 4px;
+      cursor: grab;
+    }
+
+    .turntable-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      position: relative;
+      gap: 6px;
+    }
+
+    .turntable {
+      width: 100%;
+      max-width: 210px;
+      aspect-ratio: 1 / 1;
+      background: #050811;
+      border-radius: 50%;
+      border: 10px solid #1e293b;
+      box-shadow: inset 0 0 18px rgba(0,0,0,0.9), 0 6px 14px rgba(0,0,0,0.6);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      touch-action: none;
+      will-change: transform;
+    }
+
+    .turntable.scratching {
+      border-color: #f59e0b;
+      box-shadow: 0 0 22px rgba(245, 158, 11, 0.7);
+    }
+
+    .vinyl-grooves {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: repeating-radial-gradient(circle, #111827 0, #111827 2px, #000 3px, #000 5px);
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .vinyl-marker {
+      position: absolute;
+      top: 10px;
+      width: 5px;
+      height: 26px;
+      background: #ffffff;
+      border-radius: 3px;
+      box-shadow: 0 0 8px rgba(255,255,255,0.9);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .vinyl-label {
+      width: 38%;
+      height: 38%;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.6rem;
+      font-weight: bold;
+      color: white;
+      z-index: 2;
+      box-shadow: 0 0 8px rgba(0,0,0,0.7);
+      pointer-events: none;
+    }
+
+    .deck-a .vinyl-label { background: radial-gradient(circle, #2563eb, #1e3a8a); }
+    .deck-b .vinyl-label { background: radial-gradient(circle, #db2777, #831843); }
+
+    .loop-total-display {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #fcd34d;
+      font-family: monospace;
+      text-align: center;
+    }
+
+    .deck-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(0,0,0,0.25);
+      padding: 6px;
+      border-radius: 8px;
+    }
+
+    .loop-actions-bar {
+      display: flex;
+      gap: 4px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-loop {
+      flex: 1;
+      background: #334155;
+      color: #94a3b8;
+      font-size: 0.65rem;
+      padding: 8px 4px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .btn-loop.active {
+      background: #f59e0b;
+      color: #000;
+      font-weight: 900;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.7);
+    }
+
+    .btn-loop-all {
+      background: #1e293b;
+      color: #a7f3d0;
+      border: 1px solid #059669;
+    }
+
+    .btn-loop-all.active {
+      background: var(--accent-loop-all);
+      color: #000;
+      font-weight: 900;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+    }
+
+    .playback-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .btn-play { background: #22c55e; color: black; font-weight: 800; flex: 2; height: 38px; font-size: 0.8rem; }
+    .btn-play.playing { background: #ef4444; color: white; }
+    .btn-cue { flex: 1; height: 38px; font-size: 0.75rem; }
+
+    .btn-rev {
+      background: #334155;
+      color: #94a3b8;
+      font-weight: 800;
+      flex: 1.2;
+      height: 38px;
+      font-size: 0.75rem;
+      border: 1px solid transparent;
+    }
+
+    .btn-rev.active {
+      background: var(--accent-rev);
+      color: #000;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+    }
+
+    .mixer {
+      background: var(--panel);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+      height: 100%;
+    }
+
+    .mixer-title {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+    }
+
+    .eq-section { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; flex: 1; }
+
+    .channel-strip {
+      background: rgba(0,0,0,0.25);
+      padding: 6px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      justify-content: space-around;
+    }
+
+    .ch-label { font-size: 0.7rem; font-weight: 800; }
+    .deck-a-text { color: var(--accent-a); }
+    .deck-b-text { color: var(--accent-b); }
+
+    .knob-group { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; }
+    .knob-label { font-size: 0.6rem; color: var(--text-muted); font-weight: 700; }
+
+    input[type="range"].knob-slider { width: 85%; height: 8px; accent-color: #38bdf8; touch-action: none; }
+
+    input[type="range"].vol-fader {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 80px;
+      height: 8px;
+      background: #0f172a;
+      border-radius: 4px;
+      transform: rotate(-90deg);
+      margin: 24px 0;
+      touch-action: none;
+    }
+
+    input[type="range"].vol-fader::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 16px;
+      background: #f8fafc;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .crossfader-section {
+      background: rgba(0,0,0,0.3);
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .crossfader-title { font-size: 0.65rem; font-weight: 800; color: var(--text-muted); margin-bottom: 4px; }
+
+    input[type="range"].crossfader {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      touch-action: none;
+    }
+
+    input[type="range"].crossfader::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 28px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      cursor: ew-resize;
+    }
+
+    .rec-section {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rec-title {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: #ef4444;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .rec-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      display: inline-block;
+    }
+
+    .rec-dot.recording { animation: blink 0.8s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+    .rec-controls {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .btn-rec {
+      flex: 1;
+      background: #991b1b;
+      color: white;
+      font-size: 0.7rem;
+      height: 32px;
+      justify-content: center;
+    }
+
+    .btn-rec.recording {
+      background: #ef4444;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+    }
+
+    .btn-export {
+      flex: 1;
+      background: #10b981;
+      color: black;
+      font-size: 0.7rem;
+      font-weight: 800;
+      height: 32px;
+      justify-content: center;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 6px;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      height: 18px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📱 Platines DJ Mobile (Tactile Scratch & Precision Loop)</h1>
+    <button id="btnAudio" class="btn btn-audio">🔊 Activer le Son</button>
+  </header>
+
+  <div class="mobile-tab-bar" id="mobileTabBar">
+    <button class="tab-btn tab-a active" onclick="switchMobileTab('deckA')">DECK A</button>
+    <button class="tab-btn tab-mixer" onclick="switchMobileTab('mixer')">MIXEUR</button>
+    <button class="tab-btn tab-b" onclick="switchMobileTab('deckB')">DECK B</button>
+    <button class="tab-btn" onclick="switchMobileTab('all')">VUE GLOBALE</button>
+  </div>
+
+  <div class="app-container">
+    
+    <div class="deck deck-a" id="deckAView">
+      <div class="deck-header">
+        <span class="deck-title">PLATINE A</span>
+        <div class="track-select-wrap">
+          <select id="selectA">
+            <option value="funk">Funk Groove (110 BPM)</option>
+            <option value="disco">Disco Fever (120 BPM)</option>
+            <option value="hiphop">Hip-Hop Beat (90 BPM)</option>
+            <option value="house">House Track (128 BPM)</option>
+          </select>
+          <button class="btn file-btn" onclick="document.getElementById('fileA').click()">📁 MP3</button>
+          <input type="file" id="fileA" class="file-input" accept="audio/*">
+        </div>
+      </div>
+
+      <!-- FADERS HAUT: SPEED & PITCH -->
+      <div class="top-faders-bar">
+        <div class="fader-horizontal-box">
+          <div class="fader-label-wrap">
+            <span>Speed</span>
+            <span class="fader-val-text" id="speedDispA">1.00x</span>
+          </div>
+          <input type="range" class="h-fader" id="speedFaderA" min="0.5" max="1.5" step="0.01" value="1.0">
+        </div>
+
+        <div class="fader-horizontal-box">
+          <div class="fader-label-wrap">
+            <span>Pitch</span>
+            <span class="fader-val-text" id="pitchDispA">0 st</span>
+          </div>
+          <input type="range" class="h-fader" id="pitchFaderA" min="-12" max="12" step="1" value="0">
+        </div>
+      </div>
+
+      <!-- DECK BODY: DUAL LOOP & INTERACTIVE VINYL -->
+      <div class="deck-body">
+        <div class="loop-fader-box">
+          <div class="loop-fader-title">Loop<br>Course</div>
+          <div class="loop-fader-value" id="loopCourseDispA">4s</div>
+          <div class="fader-vertical-wrap">
+            <input type="range" class="v-fader loop-course" id="loopCourseA" min="3" max="18" step="1" value="4">
+          </div>
+        </div>
+
+        <div class="turntable-container">
+          <div class="turntable" id="vinylA">
+            <div class="vinyl-grooves"></div>
+            <div class="vinyl-marker"></div>
+            <div class="vinyl-label">
+              <span id="titleA">Funk Groove</span>
+              <span id="bpmA" style="font-size: 0.5rem; opacity: 0.8">110 BPM</span>
+            </div>
+          </div>
+          <div class="loop-total-display">
+            Loop: <span id="loopTotalDispA">4.00s</span>
+          </div>
+        </div>
+
+        <div class="loop-fader-box">
+          <div class="loop-fader-title">Loop<br>Fine</div>
+          <div class="loop-fader-value" id="loopFineDispA">+0.00s</div>
+          <div class="fader-vertical-wrap">
+            <input type="range" class="v-fader loop-fine" id="loopFineA" min="-0.50" max="0.50" step="0.01" value="0.00">
+          </div>
+        </div>
+      </div>
+
+      <!-- DECK ACTION CONTROLS -->
+      <div class="deck-controls">
+        <div class="loop-actions-bar">
+          <button class="btn btn-loop" id="btnLoopHalfA">1/2</button>
+          <button class="btn btn-loop" id="btnLoopAutoA">AUTO LOOP</button>
+          <button class="btn btn-loop btn-loop-all" id="btnLoopAllA">♾️ LOOP ALL</button>
+          <button class="btn btn-loop" id="btnLoopDoubleA">x2</button>
+        </div>
+        <div class="playback-row">
+          <button class="btn btn-play" id="btnPlayA">START</button>
+          <button class="btn btn-cue" id="btnCUEA">CUE</button>
+          <button class="btn btn-rev" id="btnRevA">⏪ REV</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mixer" id="mixerView">
+      <div class="mixer-title">MIXEUR CENTRAL</div>
+
+      <div class="eq-section">
+        <div class="channel-strip">
+          <span class="ch-label deck-a-text">CH 1</span>
+          <div class="knob-group">
+            <span class="knob-label">HIGH</span>
+            <input type="range" class="knob-slider" id="hiA" min="-12" max="12" value="0">
+          </div>
+          <div class="knob-group">
+            <span class="knob-label">MID</span>
+            <input type="range" class="knob-slider" id="midA" min="-12" max="12" value="0">
+          </div>
+          <div class="knob-group">
+            <span class="knob-label">LOW</span>
+            <input type="range" class="knob-slider" id="lowA" min="-12" max="12" value="0">
+          </div>
+          <div style="height: 60px; display:flex; align-items:center;">
+            <input type="range" class="vol-fader" id="volA" min="0" max="1" step="0.01" value="0.8">
+          </div>
+        </div>
+
+        <div class="channel-strip">
+          <span class="ch-label deck-b-text">CH 2</span>
+          <div class="knob-group">
+            <span class="knob-label">HIGH</span>
+            <input type="range" class="knob-slider" id="hiB" min="-12" max="12" value="0">
+          </div>
+          <div class="knob-group">
+            <span class="knob-label">MID</span>
+            <input type="range" class="knob-slider" id="midB" min="-12" max="12" value="0">
+          </div>
+          <div class="knob-group">
+            <span class="knob-label">LOW</span>
+            <input type="range" class="knob-slider" id="lowB" min="-12" max="12" value="0">
+          </div>
+          <div style="height: 60px; display:flex; align-items:center;">
+            <input type="range" class="vol-fader" id="volB" min="0" max="1" step="0.01" value="0.8">
+          </div>
+        </div>
+      </div>
+
+      <div class="crossfader-section">
+        <div class="crossfader-title">CROSSFADER MASTER</div>
+        <input type="range" class="crossfader" id="crossfader" min="0" max="1" step="0.01" value="0.5">
+      </div>
+
+      <div class="rec-section">
+        <div class="rec-title">
+          <span class="rec-dot" id="recDot"></span>
+          <span>Enregistreur Master</span>
+        </div>
+        <div class="rec-controls">
+          <button class="btn btn-rec" id="btnRec">🔴 REC</button>
+          <button class="btn btn-export" id="btnExport" disabled>💾 WAV</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="deck deck-b" id="deckBView">
+      <div class="deck-header">
+        <span class="deck-title">PLATINE B</span>
+        <div class="track-select-wrap">
+          <select id="selectB">
+            <option value="disco">Disco Fever (120 BPM)</option>
+            <option value="funk">Funk Groove (110 BPM)</option>
+            <option value="hiphop">Hip-Hop Beat (90 BPM)</option>
+            <option value="house">House Track (128 BPM)</option>
+          </select>
+          <button class="btn file-btn" style="background:#ec4899;" onclick="document.getElementById('fileB').click()">📁 MP3</button>
+          <input type="file" id="fileB" class="file-input" accept="audio/*">
+        </div>
+      </div>
+
+      <!-- FADERS HAUT: SPEED & PITCH -->
+      <div class="top-faders-bar">
+        <div class="fader-horizontal-box">
+          <div class="fader-label-wrap">
+            <span>Speed</span>
+            <span class="fader-val-text" id="speedDispB">1.00x</span>
+          </div>
+          <input type="range" class="h-fader" id="speedFaderB" min="0.5" max="1.5" step="0.01" value="1.0">
+        </div>
+
+        <div class="fader-horizontal-box">
+          <div class="fader-label-wrap">
+            <span>Pitch</span>
+            <span class="fader-val-text" id="pitchDispB">0 st</span>
+          </div>
+          <input type="range" class="h-fader" id="pitchFaderB" min="-12" max="12" step="1" value="0">
+        </div>
+      </div>
+
+      <!-- DECK BODY: DUAL LOOP & INTERACTIVE VINYL -->
+      <div class="deck-body">
+        <div class="loop-fader-box">
+          <div class="loop-fader-title">Loop<br>Course</div>
+          <div class="loop-fader-value" id="loopCourseDispB">4s</div>
+          <div class="fader-vertical-wrap">
+            <input type="range" class="v-fader loop-course" id="loopCourseB" min="3" max="18" step="1" value="4">
+          </div>
+        </div>
+
+        <div class="turntable-container">
+          <div class="turntable" id="vinylB">
+            <div class="vinyl-grooves"></div>
+            <div class="vinyl-marker"></div>
+            <div class="vinyl-label">
+              <span id="titleB">Disco Fever</span>
+              <span id="bpmB" style="font-size: 0.5rem; opacity: 0.8">120 BPM</span>
+            </div>
+          </div>
+          <div class="loop-total-display">
+            Loop: <span id="loopTotalDispB">4.00s</span>
+          </div>
+        </div>
+
+        <div class="loop-fader-box">
+          <div class="loop-fader-title">Loop<br>Fine</div>
+          <div class="loop-fader-value" id="loopFineDispB">+0.00s</div>
+          <div class="fader-vertical-wrap">
+            <input type="range" class="v-fader loop-fine" id="loopFineB" min="-0.50" max="0.50" step="0.01" value="0.00">
+          </div>
+        </div>
+      </div>
+
+      <!-- DECK ACTION CONTROLS -->
+      <div class="deck-controls">
+        <div class="loop-actions-bar">
+          <button class="btn btn-loop" id="btnLoopHalfB">1/2</button>
+          <button class="btn btn-loop" id="btnLoopAutoB">AUTO LOOP</button>
+          <button class="btn btn-loop btn-loop-all" id="btnLoopAllB">♾️ LOOP ALL</button>
+          <button class="btn btn-loop" id="btnLoopDoubleB">x2</button>
+        </div>
+        <div class="playback-row">
+          <button class="btn btn-play" id="btnPlayB">START</button>
+          <button class="btn btn-cue" id="btnCUEB">CUE</button>
+          <button class="btn btn-rev" id="btnRevB">⏪ REV</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>DJ Mobile - Scratch Tactile Haute Réponse</span>
+    <span id="status">Audio Inactif</span>
+  </footer>
+
+  <script>
+    let audioCtx = null;
+    let masterGain = null;
+    let recDestination = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let recordedAudioBlob = null;
+
+    // Mobile View Tab Switcher Logic
+    function switchMobileTab(viewName) {
+      const isMobile = window.innerWidth < 900;
+      if (!isMobile) return;
+
+      const deckA = document.getElementById('deckAView');
+      const deckB = document.getElementById('deckBView');
+      const mixer = document.getElementById('mixerView');
+      const buttons = document.querySelectorAll('.tab-btn');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      if (viewName === 'deckA') {
+        deckA.style.display = 'flex';
+        deckB.style.display = 'none';
+        mixer.style.display = 'none';
+        buttons[0].classList.add('active');
+      } else if (viewName === 'mixer') {
+        deckA.style.display = 'none';
+        deckB.style.display = 'none';
+        mixer.style.display = 'flex';
+        buttons[1].classList.add('active');
+      } else if (viewName === 'deckB') {
+        deckA.style.display = 'none';
+        deckB.style.display = 'flex';
+        mixer.style.display = 'none';
+        buttons[2].classList.add('active');
+      } else if (viewName === 'all') {
+        deckA.style.display = 'flex';
+        deckB.style.display = 'flex';
+        mixer.style.display = 'flex';
+        buttons[3].classList.add('active');
+      }
+    }
+
+    // Auto-setup responsive view on start
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 900) {
+        document.getElementById('deckAView').style.display = 'flex';
+        document.getElementById('deckBView').style.display = 'flex';
+        document.getElementById('mixerView').style.display = 'flex';
+      } else {
+        switchMobileTab('deckA');
+      }
+    });
+
+    class DJDeck {
+      constructor(id) {
+        this.id = id;
+        this.isPlaying = false;
+        this.buffer = null;
+        this.reversedBuffer = null;
+        this.source = null;
+        this.speed = 1.0;
+        this.pitchSemitones = 0;
+        this.isReversed = false;
+        
+        // Touch Scratch Engine State
+        this.isScratching = false;
+        this.rotationAngle = 0;
+        this.lastPointerAngle = 0;
+        this.lastScratchTimestamp = 0;
+        this.scratchDirection = 1;
+        this.activePointerId = null;
+
+        // Loop Controls
+        this.loopCourseVal = 4;
+        this.loopFineVal = 0.0;
+        this.loopMode = false;
+        this.loopAllMode = false;
+        
+        this.startTime = 0;
+        this.pauseOffset = 0;
+
+        // DOM References
+        this.btnPlay = document.getElementById(`btnPlay${id}`);
+        this.btnCue = document.getElementById(`btnCUE${id}`);
+        this.btnRev = document.getElementById(`btnRev${id}`);
+        this.vinyl = document.getElementById(`vinyl${id}`);
+        this.select = document.getElementById(`select${id}`);
+        this.fileInput = document.getElementById(`file${id}`);
+        
+        this.speedFader = document.getElementById(`speedFader${id}`);
+        this.speedDisp = document.getElementById(`speedDisp${id}`);
+        this.pitchFader = document.getElementById(`pitchFader${id}`);
+        this.pitchDisp = document.getElementById(`pitchDisp${id}`);
+
+        this.loopCourseFader = document.getElementById(`loopCourse${id}`);
+        this.loopCourseDisp = document.getElementById(`loopCourseDisp${id}`);
+        this.loopFineFader = document.getElementById(`loopFine${id}`);
+        this.loopFineDisp = document.getElementById(`loopFineDisp${id}`);
+        this.loopTotalDisp = document.getElementById(`loopTotalDisp${id}`);
+        
+        this.btnLoopAuto = document.getElementById(`btnLoopAuto${id}`);
+        this.btnLoopAll = document.getElementById(`btnLoopAll${id}`);
+        this.btnLoopHalf = document.getElementById(`btnLoopHalf${id}`);
+        this.btnLoopDouble = document.getElementById(`btnLoopDouble${id}`);
+
+        this.titleEl = document.getElementById(`title${id}`);
+        this.bpmEl = document.getElementById(`bpm${id}`);
+
+        this.initUI();
+        this.startVinylLoop();
+      }
+
+      initAudioNodes() {
+        if (!audioCtx) return;
+        this.gainNode = audioCtx.createGain();
+        this.xfadeGain = audioCtx.createGain();
+
+        this.lowEq = audioCtx.createBiquadFilter();
+        this.lowEq.type = "lowshelf";
+        this.lowEq.frequency.value = 320;
+
+        this.midEq = audioCtx.createBiquadFilter();
+        this.midEq.type = "peaking";
+        this.midEq.frequency.value = 1000;
+
+        this.hiEq = audioCtx.createBiquadFilter();
+        this.hiEq.type = "highshelf";
+        this.hiEq.frequency.value = 3200;
+
+        this.gainNode.connect(this.lowEq);
+        this.lowEq.connect(this.midEq);
+        this.midEq.connect(this.hiEq);
+        this.hiEq.connect(this.xfadeGain);
+        
+        this.xfadeGain.connect(masterGain);
+      }
+
+      createReversedBuffer(buf) {
+        if (!buf || !audioCtx) return null;
+        const revBuf = audioCtx.createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate);
+        for (let i = 0; i < buf.numberOfChannels; i++) {
+          const srcData = buf.getChannelData(i);
+          const revData = revBuf.getChannelData(i);
+          for (let j = 0; j < buf.length; j++) {
+            revData[j] = srcData[buf.length - 1 - j];
+          }
+        }
+        return revBuf;
+      }
+
+      initUI() {
+        this.btnPlay.addEventListener('click', () => this.togglePlay());
+        this.btnCue.addEventListener('click', () => { this.stop(); this.play(0); });
+        this.btnRev.addEventListener('click', () => this.toggleReverse());
+
+        this.speedFader.addEventListener('input', (e) => {
+          this.speed = parseFloat(e.target.value);
+          this.speedDisp.textContent = this.speed.toFixed(2) + 'x';
+          this.updatePlaybackRate();
+        });
+
+        this.pitchFader.addEventListener('input', (e) => {
+          this.pitchSemitones = parseInt(e.target.value);
+          this.pitchDisp.textContent = (this.pitchSemitones > 0 ? '+' : '') + this.pitchSemitones + ' st';
+          this.updatePlaybackRate();
+        });
+
+        this.loopCourseFader.addEventListener('input', (e) => {
+          this.loopCourseVal = parseInt(e.target.value);
+          this.loopCourseDisp.textContent = this.loopCourseVal + 's';
+          this.updateLoopCalculations();
+        });
+
+        this.loopFineFader.addEventListener('input', (e) => {
+          this.loopFineVal = parseFloat(e.target.value);
+          const sign = this.loopFineVal >= 0 ? '+' : '';
+          this.loopFineDisp.textContent = `${sign}${this.loopFineVal.toFixed(2)}s`;
+          this.updateLoopCalculations();
+        });
+
+        this.btnLoopAuto.addEventListener('click', () => this.toggleAutoLoopMode());
+        this.btnLoopAll.addEventListener('click', () => this.toggleLoopAllMode());
+
+        this.btnLoopHalf.addEventListener('click', () => {
+          let newVal = Math.max(3, Math.floor(this.loopCourseVal / 2));
+          this.loopCourseFader.value = newVal;
+          this.loopCourseVal = newVal;
+          this.loopCourseDisp.textContent = newVal + 's';
+          this.updateLoopCalculations();
+        });
+
+        this.btnLoopDouble.addEventListener('click', () => {
+          let newVal = Math.min(18, Math.ceil(this.loopCourseVal * 2));
+          this.loopCourseFader.value = newVal;
+          this.loopCourseVal = newVal;
+          this.loopCourseDisp.textContent = newVal + 's';
+          this.updateLoopCalculations();
+        });
+
+        this.select.addEventListener('change', (e) => this.loadPreset(e.target.value));
+
+        this.fileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              audioCtx.decodeAudioData(event.target.result, (buf) => {
+                this.buffer = buf;
+                this.reversedBuffer = this.createReversedBuffer(buf);
+                this.titleEl.textContent = file.name.substring(0, 10);
+                this.bpmEl.textContent = "Custom MP3";
+                if (this.isPlaying) this.play(0);
+              });
+            };
+            reader.readAsArrayBuffer(file);
+          }
+        });
+
+        document.getElementById(`vol${this.id}`).addEventListener('input', (e) => { if (this.gainNode) this.gainNode.gain.value = parseFloat(e.target.value); });
+        document.getElementById(`low${this.id}`).addEventListener('input', (e) => { if (this.lowEq) this.lowEq.gain.value = parseFloat(e.target.value); });
+        document.getElementById(`mid${this.id}`).addEventListener('input', (e) => { if (this.midEq) this.midEq.gain.value = parseFloat(e.target.value); });
+        document.getElementById(`hi${this.id}`).addEventListener('input', (e) => { if (this.hiEq) this.hiEq.gain.value = parseFloat(e.target.value); });
+
+        const onPointerDown = (e) => {
+          initAudioSystem();
+          if (!this.buffer) return;
+
+          this.isScratching = true;
+          this.activePointerId = e.pointerId;
+          this.vinyl.setPointerCapture(e.pointerId);
+          this.vinyl.classList.add('scratching');
+
+          if (this.source) {
+            this.pauseOffset = this.getCurrentPosition();
+            try { this.source.stop(); } catch(err) {}
+            this.source = null;
+          }
+
+          this.lastPointerAngle = this.getPointerAngle(e.clientX, e.clientY);
+          this.lastScratchTimestamp = performance.now();
+          this.scratchDirection = 1;
+
+          this.initScratchSource(this.pauseOffset, 1);
+        };
+
+        const onPointerMove = (e) => {
+          if (!this.isScratching || e.pointerId !== this.activePointerId || !this.buffer) return;
+
+          const currentAngle = this.getPointerAngle(e.clientX, e.clientY);
+          let deltaAngle = currentAngle - this.lastPointerAngle;
+
+          if (deltaAngle > Math.PI) deltaAngle -= Math.PI * 2;
+          if (deltaAngle < -Math.PI) deltaAngle += Math.PI * 2;
+
+          const now = performance.now();
+          const dt = (now - this.lastScratchTimestamp) / 1000;
+
+          if (dt > 0.002) {
+            this.rotationAngle += deltaAngle * (180 / Math.PI);
+            this.vinyl.style.transform = `rotate(${this.rotationAngle}deg)`;
+
+            const angularVelocity = deltaAngle / dt;
+            let calcRate = angularVelocity / 3.45; // Normalized to 33 RPM standard
+
+            this.updateScratchAudioEngine(calcRate);
+
+            this.lastPointerAngle = currentAngle;
+            this.lastScratchTimestamp = now;
+          }
+        };
+
+        const onPointerUp = (e) => {
+          if (!this.isScratching || e.pointerId !== this.activePointerId) return;
+          this.isScratching = false;
+          this.activePointerId = null;
+          this.vinyl.classList.remove('scratching');
+
+          if (this.source) {
+            try { this.source.stop(); } catch(err) {}
+            this.source = null;
+          }
+
+          if (this.isPlaying) {
+            this.play(this.pauseOffset);
+          }
+        };
+
+        this.vinyl.addEventListener('pointerdown', onPointerDown);
+        this.vinyl.addEventListener('pointermove', onPointerMove);
+        this.vinyl.addEventListener('pointerup', onPointerUp);
+        this.vinyl.addEventListener('pointercancel', onPointerUp);
+      }
+
+      initScratchSource(offsetSec, dir) {
+        if (!audioCtx || !this.buffer) return;
+
+        if (this.source) {
+          try { this.source.stop(); } catch(e) {}
+        }
+
+        const activeBuf = (dir < 0) ? 
+          (this.isReversed ? this.buffer : this.reversedBuffer) : 
+          (this.isReversed ? this.reversedBuffer : this.buffer);
+
+        let startPos = offsetSec;
+        if (dir < 0) {
+          startPos = Math.max(0, activeBuf.duration - offsetSec);
+        }
+
+        this.source = audioCtx.createBufferSource();
+        this.source.buffer = activeBuf;
+        this.source.loop = true;
+        this.source.loopStart = 0;
+        this.source.loopEnd = activeBuf.duration;
+        this.source.playbackRate.value = 0.0001;
+
+        this.source.connect(this.gainNode);
+        this.source.start(0, startPos);
+        this.scratchDirection = dir;
+      }
+
+      updateScratchAudioEngine(calcRate) {
+        if (!this.buffer || !this.isScratching) return;
+
+        const curBuf = this.getActiveBuffer();
+        const absRate = Math.min(Math.abs(calcRate), 5.0);
+        const newDir = calcRate < 0 ? -1 : 1;
+
+        if (newDir !== this.scratchDirection && absRate > 0.05) {
+          this.initScratchSource(this.pauseOffset, newDir);
+        }
+
+        if (this.source && this.source.playbackRate) {
+          const effectiveRate = absRate < 0.03 ? 0.00001 : absRate;
+          this.source.playbackRate.setTargetAtTime(effectiveRate, audioCtx.currentTime, 0.015);
+
+          const dt = (performance.now() - this.lastScratchTimestamp) / 1000;
+          this.pauseOffset = (this.pauseOffset + (calcRate * dt)) % curBuf.duration;
+          if (this.pauseOffset < 0) this.pauseOffset += curBuf.duration;
+        }
+      }
+
+      getTotalLoopDuration() {
+        const duration = this.loopCourseVal + this.loopFineVal;
+        return Math.max(1.0, Math.round(duration * 100) / 100);
+      }
+
+      updateLoopCalculations() {
+        if (this.loopAllMode) {
+          this.loopTotalDisp.textContent = "ALL (FULL)";
+          return;
+        }
+
+        const total = this.getTotalLoopDuration();
+        this.loopTotalDisp.textContent = total.toFixed(2) + 's';
+
+        if (this.loopMode && this.source && this.isPlaying && !this.isScratching) {
+          const curBuf = this.getActiveBuffer();
+          if (curBuf) {
+            this.source.loopEnd = Math.min(this.source.loopStart + total, curBuf.duration);
+          }
+        }
+      }
+
+      toggleAutoLoopMode() {
+        if (this.loopAllMode) {
+          this.loopAllMode = false;
+          this.btnLoopAll.classList.remove('active');
+        }
+
+        this.loopMode = !this.loopMode;
+        this.btnLoopAuto.classList.toggle('active', this.loopMode);
+
+        this.applyLoopState();
+      }
+
+      toggleLoopAllMode() {
+        if (this.loopMode) {
+          this.loopMode = false;
+          this.btnLoopAuto.classList.remove('active');
+        }
+
+        this.loopAllMode = !this.loopAllMode;
+        this.btnLoopAll.classList.toggle('active', this.loopAllMode);
+
+        if (this.loopAllMode) {
+          this.loopTotalDisp.textContent = "ALL (FULL)";
+        } else {
+          this.updateLoopCalculations();
+        }
+
+        this.applyLoopState();
+      }
+
+      applyLoopState() {
+        if (this.isPlaying && this.source && this.buffer && !this.isScratching) {
+          const currentPos = this.getCurrentPosition();
+          const curBuf = this.getActiveBuffer();
+          
+          if (this.loopAllMode) {
+            this.source.loopStart = 0;
+            this.source.loopEnd = curBuf.duration;
+            this.source.loop = true;
+          } else if (this.loopMode) {
+            const totalDuration = this.getTotalLoopDuration();
+            this.source.loopStart = currentPos;
+            this.source.loopEnd = Math.min(currentPos + totalDuration, curBuf.duration);
+            this.source.loop = true;
+          } else {
+            this.source.loop = false;
+          }
+        }
+      }
+
+      getPointerAngle(x, y) {
+        const rect = this.vinyl.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        return Math.atan2(y - centerY, x - centerX);
+      }
+
+      toggleReverse() {
+        initAudioSystem();
+        const currentPos = this.getCurrentPosition();
+        this.isReversed = !this.isReversed;
+        this.btnRev.classList.toggle('active', this.isReversed);
+
+        if (this.buffer) {
+          const newOffset = Math.max(0, this.buffer.duration - currentPos);
+          if (this.isPlaying) {
+            this.play(newOffset);
+          } else {
+            this.pauseOffset = newOffset;
+          }
+        }
+      }
+
+      getActiveBuffer() {
+        return this.isReversed ? this.reversedBuffer : this.buffer;
+      }
+
+      getCombinedRate() {
+        const pitchFactor = Math.pow(2, this.pitchSemitones / 12);
+        return this.speed * pitchFactor;
+      }
+
+      getCurrentPosition() {
+        const curBuf = this.getActiveBuffer();
+        if (!this.isPlaying || !curBuf) return this.pauseOffset;
+        const elapsed = (audioCtx.currentTime - this.startTime) * this.getCombinedRate();
+        return (this.pauseOffset + elapsed) % curBuf.duration;
+      }
+
+      updatePlaybackRate() {
+        if (this.source && this.isPlaying && !this.isScratching) {
+          this.pauseOffset = this.getCurrentPosition();
+          this.startTime = audioCtx.currentTime;
+          this.source.playbackRate.setTargetAtTime(this.getCombinedRate(), audioCtx.currentTime, 0.05);
+        }
+      }
+
+      togglePlay() {
+        initAudioSystem();
+        if (this.isPlaying) this.stop();
+        else this.play(this.pauseOffset);
+      }
+
+      play(offset = 0) {
+        const activeBuf = this.getActiveBuffer();
+        if (!activeBuf) return;
+        if (this.source) {
+          try { this.source.stop(); } catch(e){}
+        }
+
+        this.source = audioCtx.createBufferSource();
+        this.source.buffer = activeBuf;
+        this.source.playbackRate.value = this.getCombinedRate();
+
+        this.pauseOffset = offset;
+        this.startTime = audioCtx.currentTime;
+
+        if (this.loopAllMode) {
+          this.source.loop = true;
+          this.source.loopStart = 0;
+          this.source.loopEnd = activeBuf.duration;
+        } else if (this.loopMode) {
+          const totalDuration = this.getTotalLoopDuration();
+          this.source.loop = true;
+          this.source.loopStart = offset;
+          this.source.loopEnd = Math.min(offset + totalDuration, activeBuf.duration);
+        } else {
+          this.source.loop = false;
+        }
+
+        this.source.connect(this.gainNode);
+        this.source.start(0, offset);
+
+        this.isPlaying = true;
+        this.btnPlay.textContent = "STOP";
+        this.btnPlay.classList.add('playing');
+      }
+
+      stop() {
+        if (this.source) {
+          this.pauseOffset = this.getCurrentPosition();
+          try { this.source.stop(); } catch(e){}
+          this.source = null;
+        }
+        this.isPlaying = false;
+        this.btnPlay.textContent = "START";
+        this.btnPlay.classList.remove('playing');
+      }
+
+      startVinylLoop() {
+        const updateVinyl = () => {
+          if (this.isPlaying && !this.isScratching) {
+            const dir = this.isReversed ? -1 : 1;
+            const degPerSec = (360 / 1.8) * this.getCombinedRate() * dir;
+            this.rotationAngle += degPerSec * (1 / 60);
+            this.vinyl.style.transform = `rotate(${this.rotationAngle}deg)`;
+          }
+          requestAnimationFrame(updateVinyl);
+        };
+        requestAnimationFrame(updateVinyl);
+      }
+
+      loadPreset(presetKey) {
+        if (!audioCtx) return;
+        let freq = 110;
+        if (presetKey === 'disco') freq = 120;
+        if (presetKey === 'hiphop') freq = 90;
+        if (presetKey === 'house') freq = 128;
+
+        this.titleEl.textContent = presetKey.toUpperCase();
+        this.bpmEl.textContent = `${freq} BPM`;
+
+        const duration = 60;
+        const sr = audioCtx.sampleRate;
+        const buf = audioCtx.createBuffer(1, sr * duration, sr);
+        const data = buf.getChannelData(0);
+
+        for (let i = 0; i < data.length; i++) {
+          const t = i / sr;
+          let sample = 0;
+          if (t % (60/freq) < 0.1) sample += Math.sin(2 * Math.PI * 60 * t) * Math.exp(-(t % (60/freq)) * 20);
+          if ((t + (30/freq)) % (60/freq) < 0.1) sample += (Math.random() * 2 - 1) * Math.exp(-((t + (30/freq)) % (60/freq)) * 10);
+          data[i] = sample * 0.5;
+        }
+
+        this.buffer = buf;
+        this.reversedBuffer = this.createReversedBuffer(buf);
+        this.pauseOffset = 0;
+        if (this.isPlaying) this.play(0);
+      }
+    }
+
+    const deckA = new DJDeck('A');
+    const deckB = new DJDeck('B');
+
+    // Initial setup for mobile view
+    switchMobileTab('deckA');
+
+    function initAudioSystem() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        masterGain = audioCtx.createGain();
+        masterGain.connect(audioCtx.destination);
+
+        recDestination = audioCtx.createMediaStreamDestination();
+        masterGain.connect(recDestination);
+
+        deckA.initAudioNodes();
+        deckB.initAudioNodes();
+        deckA.loadPreset('funk');
+        deckB.loadPreset('disco');
+        
+        document.getElementById('btnAudio').style.display = 'none';
+        document.getElementById('status').textContent = "Audio Actif";
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    document.getElementById('btnAudio').addEventListener('click', initAudioSystem);
+    document.body.addEventListener('touchstart', initAudioSystem, { once: true });
+
+    // Master Crossfader logic
+    const crossfader = document.getElementById('crossfader');
+    crossfader.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      if (deckA.xfadeGain) deckA.xfadeGain.gain.value = Math.cos(val * 0.5 * Math.PI);
+      if (deckB.xfadeGain) deckB.xfadeGain.gain.value = Math.sin(val * 0.5 * Math.PI);
+    });
+
+    // Master Audio Recorder & Export
+    const btnRec = document.getElementById('btnRec');
+    const btnExport = document.getElementById('btnExport');
+    const recDot = document.getElementById('recDot');
+    let isRecording = false;
+
+    btnRec.addEventListener('click', () => {
+      initAudioSystem();
+      if (!isRecording) startRecording();
+      else stopRecording();
+    });
+
+    function startRecording() {
+      recordedChunks = [];
+      mediaRecorder = new MediaRecorder(recDestination.stream);
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) recordedChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(recordedChunks, { type: 'audio/webm' });
+        const arrayBuffer = await audioBlob.arrayBuffer();
+        const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        
+        recordedAudioBlob = bufferToWavBlob(decodedBuffer);
+        btnExport.disabled = false;
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+      btnRec.textContent = "⏹️ STOP";
+      btnRec.classList.add('recording');
+      recDot.classList.add('recording');
+      btnExport.disabled = true;
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+      isRecording = false;
+      btnRec.textContent = "🔴 REC";
+      btnRec.classList.remove('recording');
+      recDot.classList.remove('recording');
+    }
+
+    btnExport.addEventListener('click', () => {
+      if (!recordedAudioBlob) return;
+      const url = URL.createObjectURL(recordedAudioBlob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `dj-mix-mobile-${Date.now()}.wav`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
+    });
+
+    function bufferToWavBlob(audioBuffer) {
+      const numOfChan = audioBuffer.numberOfChannels;
+      const length = audioBuffer.length * numOfChan * 2 + 44;
+      const buffer = new ArrayBuffer(length);
+      const view = new DataView(buffer);
+      const channels = [];
+      let sample = 0;
+      let offset = 0;
+      let pos = 0;
+
+      function writeString(str) {
+        for (let i = 0; i < str.length; i++) {
+          view.setUint8(pos++, str.charCodeAt(i));
+        }
+      }
+
+      function setUint16(data) {
+        view.setUint16(pos, data, true);
+        pos += 2;
+      }
+
+      function setUint32(data) {
+        view.setUint32(pos, data, true);
+        pos += 4;
+      }
+
+      writeString('RIFF');
+      setUint32(length - 8);
+      writeString('WAVE');
+      writeString('fmt ');
+      setUint32(16);
+      setUint16(1);
+      setUint16(numOfChan);
+      setUint32(audioBuffer.sampleRate);
+      setUint32(audioBuffer.sampleRate * 2 * numOfChan);
+      setUint16(numOfChan * 2);
+      setUint16(16);
+      writeString('data');
+      setUint32(length - pos - 4);
+
+      for (let i = 0; i < audioBuffer.numberOfChannels; i++) {
+        channels.push(audioBuffer.getChannelData(i));
+      }
+
+      while (offset < audioBuffer.length) {
+        for (let i = 0; i < numOfChan; i++) {
+          sample = Math.max(-1, Math.min(1, channels[i][offset]));
+          sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
+          view.setInt16(pos, sample, true);
+          pos += 2;
+        }
+        offset++;
+      }
+
+      return new Blob([buffer], { type: 'audio/wav' });
+    }
+  </script>
+</body>
+</html>
